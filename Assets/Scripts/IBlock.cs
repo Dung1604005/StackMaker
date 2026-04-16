@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public interface IBlock
@@ -11,13 +12,22 @@ public interface IBlock
 
 }
 
+[Serializable]
 public enum BlockState
 {
-    Empty,
-    Fullfill,
+    LeftTopCorner = 2,
 
-    HaveStack,
-    Blocked
+    RightTopCorner = 7,
+
+    LeftBottomCorner = 8,
+
+    RightBottomCorner = 9,
+    Empty = 1,
+    Fullfill = 4,
+    HaveStack = 3,
+    Blocked = 0,
+    StartBlock = 5,
+    EndBlock = 6
 }
 public enum Direct
 {
