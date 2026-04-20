@@ -31,5 +31,5 @@ public enum BlockState
 }
 public enum Direct
 {
-     Forward, Back, Right, Left
+     Forward, Back, Right, Left, NULL
 }

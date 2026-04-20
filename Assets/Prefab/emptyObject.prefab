@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6090389202215932693}
   - component: {fileID: 3078325912389129397}
   m_Layer: 0
-  m_Name: dimian (1)
-  m_TagString: Untagged
+  m_Name: stack
+  m_TagString: stack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
