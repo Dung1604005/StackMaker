@@ -15,19 +15,17 @@ public interface IBlock
 [Serializable]
 public enum BlockState
 {
-    LeftTopCorner = 2,
-
-    RightTopCorner = 7,
-
-    LeftBottomCorner = 8,
-
-    RightBottomCorner = 9,
+    Null = -1,
+   Blocked = 0,
     Empty = 1,
-    Fullfill = 4,
+    LeftTopCorner = 2,
     HaveStack = 3,
-    Blocked = 0,
+    Fullfill = 4,
     StartBlock = 5,
-    EndBlock = 6
+    EndBlock = 6,
+    RightTopCorner = 7,
+    LeftBottomCorner = 8,
+    RightBottomCorner = 9,
 }
 public enum Direct
 {

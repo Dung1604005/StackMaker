@@ -29,6 +29,26 @@ public class CalculateDirect2D
         }
     }
 
+    public static Vector2Int ChangeDirectToVector2Int(Direct direct)
+    {
+        switch (direct)
+        {
+            case Direct.Back:
+                return new Vector2Int(1,0);
+                
+            case Direct.Forward:
+                return  new Vector2Int(-1, 0);
+                
+            case Direct.Left:
+                return  new Vector2Int(0,  -1);
+                
+            default:
+                return new Vector2Int(0, 1);
+                
+
+        }
+    }
+
     public static Direct ChangeCornerToDirect(BlockState blockState, Direct currentDirect)
     {
         switch (blockState)

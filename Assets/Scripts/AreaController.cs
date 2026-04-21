@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 public class AreaController : MonoBehaviour
 {
     [SerializeField] private AreaContext areaCtx;
@@ -23,6 +24,9 @@ public class AreaController : MonoBehaviour
     public Vector2Int StartGridPosition => startGridPosition;
 
     public Vector2Int EndGridPosition => endGridPosition;
+
+    public AreaContext AreaCtx => areaCtx;
+
     public void OnEnable()
     {
         EventBus<OnChangeDirect>.Subcribe(SlideInDirection);
@@ -34,9 +38,9 @@ public class AreaController : MonoBehaviour
 
     [ContextMenu("Load Data")]
 
-    public void LoadLevel()
+    public void LoadLevel(string path)
     {
-        string path = "Level_01";
+        
 
         //Load file lên bằng Resources
         TextAsset mapFile = Resources.Load<TextAsset>(path);
@@ -47,6 +51,8 @@ public class AreaController : MonoBehaviour
 
             // Đọc data
             areaCtx = JsonConvert.DeserializeObject<AreaContext>(mapFile.text);
+            startGridPosition = new Vector2Int(areaCtx.StartPosition[0], areaCtx.StartPosition[1]);
+            endGridPosition = new Vector2Int(areaCtx.EndPosition[0], areaCtx.EndPosition[1]);
 
         }
         else
@@ -61,7 +67,7 @@ public class AreaController : MonoBehaviour
     public void GenerateGrid()
     {
         blockDictionary.Clear();
-        areaCtx.TotalStack = areaCtx.Height * areaCtx.Width;
+        
 
         for (int x = 0; x < areaCtx.Height; x++)
         {
@@ -73,51 +79,37 @@ public class AreaController : MonoBehaviour
                 if (blockState == BlockState.Blocked)
                 {
                     GameObject a = Instantiate(blockPrefab, worldPos, Quaternion.identity, transform);
-                    a.name = $"Block[{x}][{z}]";
-                    areaCtx.TotalStack -= 1;
+                    
                 }
                 else if (blockState == BlockState.LeftTopCorner)
                 {
                     GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);
                     a.transform.Rotate(new Vector3(0, 270f, 0));
-                    a.name = $"Block[{x}][{z}]";
                     blockDictionary.Add(new Vector2Int(x, z), a);
                 }
                 else if (blockState == BlockState.RightTopCorner)
                 {
-                    GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);
-                    a.name = $"Block[{x}][{z}]";
-                    Debug.Log(new Vector2Int(x, z));
+                    GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);             
                     blockDictionary.Add(new Vector2Int(x, z), a);
                 }
                 else if (blockState == BlockState.LeftBottomCorner)
                 {
                     GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);
                     a.transform.Rotate(new Vector3(0, 180f, 0));
-                    a.name = $"Block[{x}][{z}]";
                     blockDictionary.Add(new Vector2Int(x, z), a);
                 }
                 else if (blockState == BlockState.RightBottomCorner)
                 {
                     GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);
                     a.transform.Rotate(new Vector3(0, 90f, 0));
-                    a.name = $"Block[{x}][{z}]";
                     blockDictionary.Add(new Vector2Int(x, z), a);
                 }
-                else
+                else 
                 {
-                    if (blockState == BlockState.StartBlock)
-                    {
-                        startGridPosition = new Vector2Int(x, z);
-                    }
-                    else if (blockState == BlockState.EndBlock)
-                    {
-                        endGridPosition = new Vector2Int(x, z);
-                    }
                     GameObject a = Instantiate(emptyPrefab, worldPos, Quaternion.identity, transform);
-                    a.name = $"Block[{x}][{z}]";
                     blockDictionary.Add(new Vector2Int(x, z), a);
                 }
+                
             }
         }
     }
@@ -129,6 +121,15 @@ public class AreaController : MonoBehaviour
         Vector3 worldPos = new Vector3(originPos.x - x * cellSize.x - cellSize.x / 2f, 0f, originPos.z - z * cellSize.y - cellSize.y / 2f);
 
         return worldPos;
+    }
+
+    public void CalculateOriginWorldPosition(Vector2Int gridPosition, Vector3 worldPosition)
+    {
+        Vector2 cellSize = new Vector2(1f, 1f);
+        Vector3 worldPos = new Vector3(worldPosition.x+ gridPosition.x*cellSize.x +cellSize.x/2f, 0f,
+        worldPosition.z + gridPosition.y*cellSize.y + cellSize.y/2f);
+       
+        originWorldPos = worldPos;
     }
 
     public bool IsGridPositionValid(Vector2Int gridPosition)
@@ -162,6 +163,10 @@ public class AreaController : MonoBehaviour
     }
     public void SlideInDirection(OnChangeDirect onChangeDirect)
     {
+        if(onChangeDirect.areaId != areaCtx.areaId)
+        {
+            return;
+        }
         Vector2Int start = onChangeDirect.playerGridPosition;
         Direct direct = onChangeDirect.direct;
         Vector2Int current = start;
@@ -185,27 +190,9 @@ public class AreaController : MonoBehaviour
             else
             {
                 current = nextPos;
-                if (areaCtx.Grid[current.x][current.y] != BlockState.Empty)
-                {
-                    areaCtx.Grid[current.x][current.y] = BlockState.Empty;
-                    GameObject block = blockDictionary[current];
-                    foreach (Transform child in block.transform)
-                    {
-                        
-                        if (child.CompareTag("stack"))
-                        {
-                            Destroy(child.gameObject);
-                        }
-                    }
-
-                }
-
-
             }
-
         }
-        Debug.Log("PATH:" + onChangeDirect.playerGridPosition + " " + current);
-
+        Debug.Log(current);
         EventBus<OnChangeTargetPositionPlayer>.Raise(new OnChangeTargetPositionPlayer
         {
             GridPosition = current,
@@ -216,12 +203,9 @@ public class AreaController : MonoBehaviour
 
     void Start()
     {
-        LoadLevel();
-        GenerateGrid();
-        foreach(var item in blockDictionary.Keys)
-        {
-            Debug.Log(item);
-        }
+        // LoadLevel("Level_01_01");
+        // GenerateGrid();
+        
     }
 
 
