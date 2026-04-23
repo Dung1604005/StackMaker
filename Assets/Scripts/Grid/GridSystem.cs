@@ -22,10 +22,6 @@ public class GridSystem : MonoBehaviour
 
     public AreaController CurrentArea => currentArea;
 
-
-
-
-
     public BrickBase GetBrickPrefab(int index)
     {
         if (listBrickPrefab == null || index >= listBrickPrefab.Count || index < 0)
@@ -43,7 +39,7 @@ public class GridSystem : MonoBehaviour
         //Generate bridge between every area
         for (int i = 1; i <= listArea.Count && i <= listJsonPath.Count; i++)
         {
-             Vector3 lastEndBlockPosition = listArea[i - 1].ConvertGridToWorldPosition(listArea[i - 1].EndGridPosition.x, listArea[i - 1].EndGridPosition.y);
+             Vector3 lastEndBlockPosition = listArea[i - 1].ConvertGridToWorldPosition(listArea[i - 1].EndGridPosition.x, listArea[i - 1].EndGridPosition.y, listArea[i-1].OriginWorldPos);
              Vector3 bridgeDirect = new Vector3(listArea[i - 1].AreaCtx.BridgeDirect[0], 0f, listArea[i - 1].AreaCtx.BridgeDirect[1]);
             Vector3 worldPositionStartBlock = lastEndBlockPosition
                 + bridgeDirect * (listArea[i - 1].AreaCtx.StackToPass + 1);

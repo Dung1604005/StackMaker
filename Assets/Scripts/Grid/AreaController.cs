@@ -19,6 +19,8 @@ public class AreaController : MonoBehaviour
 
     public AreaContext AreaCtx => areaCtx;
 
+    public Vector3 OriginWorldPos => originWorldPos;
+
     [ContextMenu("Load Data")]
 
     public void LoadLevel(string path)
@@ -56,7 +58,7 @@ public class AreaController : MonoBehaviour
             {
                 // Handle spawn brick and rotate if it is corner
                 BlockState blockState = areaCtx.Grid[x][z];
-                Vector3 worldPos = ConvertGridToWorldPosition(x, z);
+                Vector3 worldPos = ConvertGridToWorldPosition(x, z, originWorldPos);
                 int indexPrefab = 0;
                 Vector3 rotateEuler = Vector3.zero;
 
@@ -99,9 +101,9 @@ public class AreaController : MonoBehaviour
         }
     }
 
-    public Vector3 ConvertGridToWorldPosition(int x, int z)
+    public Vector3 ConvertGridToWorldPosition(int x, int z, Vector3 originPos)
     {
-        Vector3 originPos = originWorldPos;
+        
         Vector2 cellSize = new Vector2(1f, 1f);
         Vector3 worldPos = new Vector3(originPos.x - x * cellSize.x - cellSize.x / 2f, 0f, originPos.z - z * cellSize.y - cellSize.y / 2f);
 

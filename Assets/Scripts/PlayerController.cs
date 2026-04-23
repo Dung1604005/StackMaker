@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     public void OnInit()
     {
 
-        this.transform.position = gridSystem.CurrentArea.ConvertGridToWorldPosition(gridSystem.CurrentArea.StartGridPosition.x, gridSystem.CurrentArea.StartGridPosition.y) + offsetPositionFromGrid;
+        this.transform.position = gridSystem.CurrentArea.ConvertGridToWorldPosition(gridSystem.CurrentArea.StartGridPosition.x, gridSystem.CurrentArea.StartGridPosition.y, gridSystem.CurrentArea.OriginWorldPos) + offsetPositionFromGrid;
         isMoving = false;
         targetPosition = transform.position;
     }
