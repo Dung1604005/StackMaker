@@ -7,13 +7,6 @@ public class AreaController : MonoBehaviour
 {
     [SerializeField] private GridSystem gridSystem;
     [SerializeField] private AreaContext areaCtx;
-
-    [SerializeField] private GameObject blockPrefab;
-
-    [SerializeField] private GameObject emptyPrefab;
-
-    [SerializeField] private GameObject cornerPrefab;
-
     [SerializeField] private Vector3 originWorldPos;
 
     [SerializeField] private Vector2Int startGridPosition;
@@ -61,6 +54,7 @@ public class AreaController : MonoBehaviour
         {
             for (int z = 0; z < areaCtx.Width; z++)
             {
+                // Handle spawn brick and rotate if it is corner
                 BlockState blockState = areaCtx.Grid[x][z];
                 Vector3 worldPos = ConvertGridToWorldPosition(x, z);
                 int indexPrefab = 0;
@@ -68,13 +62,13 @@ public class AreaController : MonoBehaviour
 
                 if (blockState == BlockState.Blocked)
                 {
-                    indexPrefab = 0;
+                    indexPrefab = GameConfig.ID_PREFAB_BLOCK;
                     
                 }
                 else if (blockState == BlockState.LeftTopCorner || blockState == BlockState.RightTopCorner ||
                 blockState == BlockState.LeftBottomCorner ||blockState == BlockState.RightBottomCorner )
                 {
-                    indexPrefab = 2;
+                    indexPrefab = GameConfig.ID_PREFAB_CORNER_BRICK;
                     if(blockState == BlockState.LeftTopCorner)
                     {
                         rotateEuler = new Vector3(0, 270f, 0);    
@@ -90,10 +84,10 @@ public class AreaController : MonoBehaviour
                 }
                 else 
                 {
-                    indexPrefab = 1;
+                    indexPrefab = GameConfig.ID_PREFAB_BRICK;
                 }
                 
-                BrickBase brickBase = gridSystem.GetBlockPrefab(indexPrefab);
+                BrickBase brickBase = gridSystem.GetBrickPrefab(indexPrefab);
 
                 BrickBase ob = PoolManager.Instance.Spawn<BrickBase>(brickBase, worldPos, Quaternion.identity);
                 ob.transform.SetParent(this.transform);
@@ -116,9 +110,9 @@ public class AreaController : MonoBehaviour
 
     public void CalculateOriginWorldPosition(Vector2Int gridPosition, Vector3 worldPosition)
     {
-        Vector2 cellSize = new Vector2(1f, 1f);
-        Vector3 worldPos = new Vector3(worldPosition.x+ gridPosition.x*cellSize.x +cellSize.x/2f, 0f,
-        worldPosition.z + gridPosition.y*cellSize.y + cellSize.y/2f);
+        
+        Vector3 worldPos = new Vector3(worldPosition.x+ gridPosition.x*GameConfig.CellSize.x +GameConfig.CellSize.x/2f, 0f,
+        worldPosition.z + gridPosition.y*GameConfig.CellSize.y + GameConfig.CellSize.y/2f);
        
         originWorldPos = worldPos;
     }
@@ -132,11 +126,7 @@ public class AreaController : MonoBehaviour
         return true;
     }
 
-    void Start()
-    {
-        
-        
-    }
+    
 
 
 

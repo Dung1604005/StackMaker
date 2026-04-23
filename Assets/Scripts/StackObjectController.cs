@@ -19,16 +19,26 @@ public class StackObjectController : MonoBehaviour
 
     [SerializeField] private Transform parent;
 
-    private ObjectPool<StackObject> objectPool;
+    [SerializeField]private Stack<StackObject> currentStackObjects;
 
-    private Stack<StackObject> currentStackObjects;
+    private ObjectPool<StackObject> objectPool;
 
     public float OffsetY => offsetY;
 
-
+    public void OnEnable()
+    {
+        EventBus<OnAddStack>.Subcribe(AddStackObject);
+        EventBus<OnRemoveStack>.Subcribe(RemoveStackObject);
+    }
+    public void OnDisable()
+    {
+        EventBus<OnAddStack>.UnSubcribe(AddStackObject);
+        EventBus<OnRemoveStack>.UnSubcribe(RemoveStackObject);
+    }
     void Start()
     {
         OnInit();
+        
     }
 
     public void OnInit()
@@ -43,26 +53,39 @@ public class StackObjectController : MonoBehaviour
         return currentStackObjects.Count;
     }
 
-    public void AddStackObject()
+    public void AddStackObject(OnAddStack onAddStack)
     {
+       
         StackObject stackObject = objectPool.Get();
         
         stackObject.transform.SetParent(this.transform);
         stackObject.transform.localPosition = new Vector3(0, ((currentStackObjects.Count-2)*offsetY), 0);
         currentStackObjects.Push(stackObject);
+        playerController.Jump(currentStackObjects.Count);
         
-        EventBus<OnChangeStackAmount>.Raise(new OnChangeStackAmount
-        {
-            numberStack = currentStackObjects.Count
-        });
+        
     }
 
-    public void RemoveStackObject()
+    
+    public void RemoveStackObject(OnRemoveStack onRemoveStack)
     {
+        if(currentStackObjects.Count == 0)
+        {
+            playerController.StopMove();
+            //Handle logic when player lose
+            return;
+        }
         StackObject stackObject = currentStackObjects.Pop();
 
         objectPool.ReturnToPool(stackObject);
+        playerController.Fall(currentStackObjects.Count);
+
+        EventBus<OnRemoveStackSucceed>.Raise(new OnRemoveStackSucceed
+        {
+            IdBrick = onRemoveStack.IdBrick
+        });
     }
+    
 
 
 

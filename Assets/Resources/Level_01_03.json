@@ -5,7 +5,7 @@
   "Height": 7,
   "StackToPass": 15,
   "BridgeDirect": [0, 1],
-  "StartPosition": [7, 3],
+  "StartPosition": [6, 3],
   "EndPosition": [2, 0],
   "Grid": [
     [0, 0, 0, 0, 0, 0, 0],

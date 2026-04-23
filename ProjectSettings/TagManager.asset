@@ -8,6 +8,8 @@ TagManager:
   - Block
   - CornerBrick
   - Brick
+  - Bridge
+  - Undefined
   layers:
   - Default
   - TransparentFX

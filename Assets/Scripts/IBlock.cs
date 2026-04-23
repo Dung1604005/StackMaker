@@ -16,7 +16,7 @@ public enum BlockState
     Empty = 1,
     LeftTopCorner = 2,
     HaveStack = 3,
-    Fullfill = 4,
+    Bridge = 4,
     StartBlock = 5,
     EndBlock = 6,
     RightTopCorner = 7,

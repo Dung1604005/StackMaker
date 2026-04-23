@@ -157,9 +157,6 @@ MonoBehaviour:
     BridgeDirect: 
     StartPosition: 
     EndPosition: 
-  blockPrefab: {fileID: 2926784088901478514, guid: 118fa1bd71722764dabef3ccfae27ee7, type: 3}
-  emptyPrefab: {fileID: 5218752829649080106, guid: 15cc18f24d5ae2141aeb07a538043eb9, type: 3}
-  cornerPrefab: {fileID: 4392442822002419207, guid: 08ad82ffca119044db2912ee4f7a29c2, type: 3}
   originWorldPos: {x: 0, y: 0, z: 0}
   startGridPosition: {x: 3, y: 1}
   endGridPosition: {x: 5, y: 9}
@@ -394,7 +391,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.23192054, y: 0.6679917, z: -0.23192061, w: 0.66799164}
-  m_LocalPosition: {x: -14.849999, y: 16.06, z: -3.8900003}
+  m_LocalPosition: {x: -14.85, y: 16.06, z: -0.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -669,7 +666,6 @@ MonoBehaviour:
   stackObjectController: {fileID: 112218560}
   playerVisualTransform: {fileID: 1470169344}
   offsetPositionFromGrid: {x: 0, y: 3, z: 0}
-  targetBlockState: 0
   direct: 0
   speed: 7
   isMoving: 0
@@ -1480,9 +1476,6 @@ MonoBehaviour:
     BridgeDirect: 
     StartPosition: 
     EndPosition: 
-  blockPrefab: {fileID: 2926784088901478514, guid: 118fa1bd71722764dabef3ccfae27ee7, type: 3}
-  emptyPrefab: {fileID: 5218752829649080106, guid: 15cc18f24d5ae2141aeb07a538043eb9, type: 3}
-  cornerPrefab: {fileID: 4392442822002419207, guid: 08ad82ffca119044db2912ee4f7a29c2, type: 3}
   originWorldPos: {x: 0, y: 0, z: 0}
   startGridPosition: {x: 3, y: 1}
   endGridPosition: {x: 5, y: 9}
@@ -1539,9 +1532,6 @@ MonoBehaviour:
     BridgeDirect: 
     StartPosition: 
     EndPosition: 
-  blockPrefab: {fileID: 2926784088901478514, guid: 118fa1bd71722764dabef3ccfae27ee7, type: 3}
-  emptyPrefab: {fileID: 5218752829649080106, guid: 15cc18f24d5ae2141aeb07a538043eb9, type: 3}
-  cornerPrefab: {fileID: 4392442822002419207, guid: 08ad82ffca119044db2912ee4f7a29c2, type: 3}
   originWorldPos: {x: 0, y: 0, z: 0}
   startGridPosition: {x: 3, y: 1}
   endGridPosition: {x: 5, y: 9}
@@ -1707,12 +1697,16 @@ MonoBehaviour:
     MaxSize: 200
     Parent: {fileID: 0}
   - PoolName: CornerBrick
-    MinSize: 16
-    MaxSize: 32
-    Parent: {fileID: 0}
-  - PoolName: Brick
     MinSize: 32
     MaxSize: 64
+    Parent: {fileID: 0}
+  - PoolName: Brick
+    MinSize: 64
+    MaxSize: 128
+    Parent: {fileID: 0}
+  - PoolName: Bridge
+    MinSize: 64
+    MaxSize: 128
     Parent: {fileID: 0}
 --- !u!4 &1680695369
 Transform:
@@ -1790,11 +1784,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5cc82cbb9ff8794b8c47c6a07168c0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridSystem
-  bridgeBlockPrefab: {fileID: 425846356183881601, guid: 152700cd1d6ccaf4984801b1cb6858f1, type: 3}
-  listBlockPrefab:
+  winpos: {fileID: 4404694782911921749, guid: 6d8649225f988b14f89f34e880bb9934, type: 3}
+  listBrickPrefab:
   - {fileID: 1330982921977656717, guid: 118fa1bd71722764dabef3ccfae27ee7, type: 3}
   - {fileID: 8873447934890038947, guid: 15cc18f24d5ae2141aeb07a538043eb9, type: 3}
-  - {fileID: 7985175072689298298, guid: 08ad82ffca119044db2912ee4f7a29c2, type: 3}
+  - {fileID: 602425519185860390, guid: 08ad82ffca119044db2912ee4f7a29c2, type: 3}
+  - {fileID: -1733462318668021140, guid: 152700cd1d6ccaf4984801b1cb6858f1, type: 3}
   listArea:
   - {fileID: 1197511}
   - {fileID: 1134139540}
@@ -1815,7 +1810,7 @@ Transform:
   m_GameObject: {fileID: 2091380191}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.48963, y: 6.84209, z: -4.85568}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

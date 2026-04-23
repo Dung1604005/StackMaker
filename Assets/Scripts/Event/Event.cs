@@ -28,7 +28,27 @@ public struct OnChangeTargetPositionPlayer: IEvent
 
 }
 
-public struct OnChangeStackAmount: IEvent
+public struct OnAddStack: IEvent
 {
-    public int numberStack;
+    
+}
+
+public struct OnRemoveStack: IEvent
+{
+    public int IdBrick;
+}
+
+public struct OnRemoveStackSucceed : IEvent
+{
+    public int IdBrick;
+}
+
+public struct OnWinEvent: IEvent
+{
+    
+}
+
+public struct OnLoseEvent: IEvent
+{
+    
 }

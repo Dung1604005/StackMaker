@@ -3,7 +3,7 @@
   "areaId": 1,
   "Width": 10,
   "Height": 10,
-  "StackToPass": 15,
+  "StackToPass": 20,
   "BridgeDirect": [0, -1],
   "StartPosition": [3, 1],
   "EndPosition": [5, 9],

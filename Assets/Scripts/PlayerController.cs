@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Vector3 offsetPositionFromGrid;
 
-    [SerializeField] private BlockState targetBlockState;
-
     [SerializeField] private Direct direct;
 
     [SerializeField] private float speed = 5f;
@@ -29,16 +27,13 @@ public class PlayerController : MonoBehaviour
     public void OnEnable()
     {
         EventBus<OnChangeDirect>.Subcribe(ChangeDirect);
-
-        EventBus<OnChangeStackAmount>.Subcribe(Jump);
-        EventBus<OnMoveOnBridge>.Subcribe(MoveOnBridge);
+        EventBus<OnWinEvent>.Subcribe(OnWin);
     }
 
     public void OnDisable()
     {
         EventBus<OnChangeDirect>.UnSubcribe(ChangeDirect);
-        EventBus<OnChangeStackAmount>.UnSubcribe(Jump);
-        EventBus<OnMoveOnBridge>.UnSubcribe(MoveOnBridge);
+        EventBus<OnWinEvent>.UnSubcribe(OnWin);
     }
 
     public void OnInit()
@@ -59,20 +54,22 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+        //When player change direct, detech the furthest block can reach
 
         direct = onChangeDirect.direct;
         Vector3 directionVector = new Vector3(CalculateDirect2D.ChangeDirectToVector2Int(direct).x, 0f, CalculateDirect2D.ChangeDirectToVector2Int(direct).y);
         RaycastHit hit;
-        Debug.DrawRay(transform.position, directionVector);
+        // Detech the nearest wall
         if (Physics.Raycast(transform.position, directionVector, out hit, GameConfig.MAX_DISTANCE_RAYCAST, GameConfig.LAYER_WALL))
         {
             if (hit.collider.TryGetComponent<BrickBase>(out BrickBase brick))
             {
-                targetPosition = brick.GetWorldPosition() - directionVector + offsetPositionFromGrid;
-                
+                // Back 1 cell from the wall to get the last cell player can reach
+                Vector3 directBack = new Vector3(directionVector.x * GameConfig.CellSize.x, directionVector.y * GameConfig.CellSize.y,
+                directionVector.z * GameConfig.CellSize.z);
+                targetPosition = brick.GetWorldPosition() - directBack + offsetPositionFromGrid;
+
             }
-
-
 
         }
         if (isMoving && (targetPosition - transform.position).sqrMagnitude <= 0.1f)
@@ -98,74 +95,69 @@ public class PlayerController : MonoBehaviour
         else
         {
 
-            // Đổi góc tự động khi gặp góc nảy
+
             if (isMoving && (targetPosition - transform.position).sqrMagnitude <= 0.01f)
             {
                 isMoving = false;
-
+                // Automatic change direct if find special corner
                 if (Physics.Raycast(transform.position, new Vector3(0, -1, 0), out RaycastHit hit, 20f, GameConfig.LAYER_BRICK))
                 {
-                    Debug.Log(hit);
                     if (hit.collider.TryGetComponent<BrickBase>(out BrickBase brick))
                     {
-                        Debug.Log(brick.GetBlockState());
-                        Direct nxtDirect = CalculateDirect2D.ChangeCornerToDirect(brick.GetBlockState(),direct);
-
-                        ChangeDirect(new OnChangeDirect
+                        Direct nxtDirect = CalculateDirect2D.ChangeCornerToDirect(brick.GetBlockState(), direct);
+                        if (nxtDirect == Direct.NULL)
                         {
-                            direct = nxtDirect
-                        });
-                       
+                            //Place player to the middle of brick 
+                            this.transform.position = brick.GetWorldPosition() + offsetPositionFromGrid;
+                            return;
+                        }
+                        else
+                        {
+                            // Automatic change direct if find special corner
+                            ChangeDirect(new OnChangeDirect
+                            {
+                                direct = nxtDirect
+                            });
+                        }
                     }
                 }
-
-
-
-                //RaycastHit[] hit = Physics.Raycast(transform.position, new Vector3(0, -1, 0), 20f);
 
             }
             if ((targetPosition - transform.position).sqrMagnitude <= 0.01f)
             {
                 isMoving = false;
             }
-
-
-
-
         }
     }
 
-    public void MoveOnBridge(OnMoveOnBridge data)
+    public void StopMove()
     {
-        if (isMoving)
-        {
-            return;
-        }
-
-
-        targetPosition = data.target;
-
-        if ((targetPosition - transform.position).sqrMagnitude >= 0.01)
-        {
-            isMoving = true;
-        }
-        else
-        {
-            isMoving = false;
-        }
+        targetPosition = this.transform.position;
     }
 
-    public void Jump(OnChangeStackAmount onChangeStackAmount)
+    public void OnWin(OnWinEvent onWinEvent)
     {
-        playerVisualTransform.localPosition = new Vector3(0f, onChangeStackAmount.numberStack * stackObjectController.OffsetY, 0f);
+        StopMove();
     }
+
+
+    public void Jump(int stackAmount)
+    {
+        playerVisualTransform.localPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
+    }
+    public void Fall(int stackAmount)
+    {
+        playerVisualTransform.localPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
+    }
+    
+
 
     void Start()
     {
         OnInit();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (!isMoving) return;
 
