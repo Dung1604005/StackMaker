@@ -121,9 +121,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8739779165247534651}
+  - component: {fileID: 8873447934890038947}
   m_Layer: 0
   m_Name: emptyObject
-  m_TagString: Untagged
+  m_TagString: Brick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -145,6 +146,21 @@ Transform:
   - {fileID: 3546196291512226834}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8873447934890038947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218752829649080106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
+  blockState: 0
+  stackObjectController: {fileID: 0}
+  interacted: 0
 --- !u!1 &8208545902083687442
 GameObject:
   m_ObjectHideFlags: 0

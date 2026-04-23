@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> where T:  Component, IPoolable
+public class ObjectPool<T>: IPool where T:  Component, IPoolable
 {
     
     private Queue<T> pool = new Queue<T>();
@@ -17,6 +17,7 @@ public class ObjectPool<T> where T:  Component, IPoolable
 
     public void ReturnToPool(T ob)
     {
+        
         if(pool.Count >= maxSize)
         {
             Object.Destroy(ob.gameObject);
@@ -84,4 +85,9 @@ public interface IPoolable
     public void OnInit();
 
     public void OnDeSpawn();
+}
+
+public interface IPool
+{
+    public void PreWarm();
 }

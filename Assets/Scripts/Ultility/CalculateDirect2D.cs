@@ -34,16 +34,16 @@ public class CalculateDirect2D
         switch (direct)
         {
             case Direct.Back:
-                return new Vector2Int(1,0);
+                return new Vector2Int(-1,0);
                 
             case Direct.Forward:
-                return  new Vector2Int(-1, 0);
+                return  new Vector2Int(1, 0);
                 
             case Direct.Left:
-                return  new Vector2Int(0,  -1);
+                return  new Vector2Int(0,  1);
                 
             default:
-                return new Vector2Int(0, 1);
+                return new Vector2Int(0, -1);
                 
 
         }

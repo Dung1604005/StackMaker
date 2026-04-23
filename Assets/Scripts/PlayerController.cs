@@ -12,8 +12,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Context")]
 
-    [SerializeField] private Vector2Int playerGridPosition;
-
     [SerializeField] private Vector3 offsetPositionFromGrid;
 
     [SerializeField] private BlockState targetBlockState;
@@ -25,18 +23,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isMoving = false;
 
     [SerializeField] private Vector3 targetPosition;
-
-    private bool canHitStack =  true;
-
-    public Vector2Int PlayerGridPosition => playerGridPosition;
-
     public bool IsMoving => isMoving;
 
     #region Init
     public void OnEnable()
     {
         EventBus<OnChangeDirect>.Subcribe(ChangeDirect);
-        EventBus<OnChangeTargetPositionPlayer>.Subcribe(ChangeTarget);
+
         EventBus<OnChangeStackAmount>.Subcribe(Jump);
         EventBus<OnMoveOnBridge>.Subcribe(MoveOnBridge);
     }
@@ -44,15 +37,14 @@ public class PlayerController : MonoBehaviour
     public void OnDisable()
     {
         EventBus<OnChangeDirect>.UnSubcribe(ChangeDirect);
-        EventBus<OnChangeTargetPositionPlayer>.UnSubcribe(ChangeTarget);
         EventBus<OnChangeStackAmount>.UnSubcribe(Jump);
         EventBus<OnMoveOnBridge>.UnSubcribe(MoveOnBridge);
     }
 
     public void OnInit()
     {
-        playerGridPosition = gridSystem.CurrentArea.StartGridPosition;
-        this.transform.position = gridSystem.CurrentArea.ConvertGridToWorldPosition(playerGridPosition.x, playerGridPosition.y) + offsetPositionFromGrid;
+
+        this.transform.position = gridSystem.CurrentArea.ConvertGridToWorldPosition(gridSystem.CurrentArea.StartGridPosition.x, gridSystem.CurrentArea.StartGridPosition.y) + offsetPositionFromGrid;
         isMoving = false;
         targetPosition = transform.position;
     }
@@ -63,25 +55,35 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeDirect(OnChangeDirect onChangeDirect)
     {
-        direct = onChangeDirect.direct;
-
-    }
-
-    public void ChangeTarget(OnChangeTargetPositionPlayer data)
-    {
-        playerGridPosition = data.GridPosition;
-        targetBlockState = data.TargetBlockState;
-        targetPosition = data.TargetPosition + offsetPositionFromGrid;
-
-        if ((targetPosition - transform.position).sqrMagnitude >= 0.01)
+        if (isMoving)
         {
-            isMoving = true;
+            return;
+        }
+
+        direct = onChangeDirect.direct;
+        Vector3 directionVector = new Vector3(CalculateDirect2D.ChangeDirectToVector2Int(direct).x, 0f, CalculateDirect2D.ChangeDirectToVector2Int(direct).y);
+        RaycastHit hit;
+        Debug.DrawRay(transform.position, directionVector);
+        if (Physics.Raycast(transform.position, directionVector, out hit, GameConfig.MAX_DISTANCE_RAYCAST, GameConfig.LAYER_WALL))
+        {
+            if (hit.collider.TryGetComponent<BrickBase>(out BrickBase brick))
+            {
+                targetPosition = brick.GetWorldPosition() - directionVector + offsetPositionFromGrid;
+                
+            }
+
+
+
+        }
+        if (isMoving && (targetPosition - transform.position).sqrMagnitude <= 0.1f)
+        {
+            isMoving = false;
+
         }
         else
         {
-            isMoving = false;
+            isMoving = true;
         }
-
     }
 
     #endregion
@@ -95,22 +97,31 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+
             // Đổi góc tự động khi gặp góc nảy
             if (isMoving && (targetPosition - transform.position).sqrMagnitude <= 0.01f)
             {
                 isMoving = false;
-                if (targetBlockState == BlockState.LeftTopCorner || targetBlockState == BlockState.RightTopCorner ||
-                targetBlockState == BlockState.LeftBottomCorner || targetBlockState == BlockState.RightBottomCorner)
-                {
-                    Direct nextDirect = CalculateDirect2D.ChangeCornerToDirect(targetBlockState, direct);
-                    
-                    if (nextDirect != Direct.NULL)
-                    {
-                        gridSystem.ActiveMove(nextDirect);
-                        
-                    }
 
+                if (Physics.Raycast(transform.position, new Vector3(0, -1, 0), out RaycastHit hit, 20f, GameConfig.LAYER_BRICK))
+                {
+                    Debug.Log(hit);
+                    if (hit.collider.TryGetComponent<BrickBase>(out BrickBase brick))
+                    {
+                        Debug.Log(brick.GetBlockState());
+                        Direct nxtDirect = CalculateDirect2D.ChangeCornerToDirect(brick.GetBlockState(),direct);
+
+                        ChangeDirect(new OnChangeDirect
+                        {
+                            direct = nxtDirect
+                        });
+                       
+                    }
                 }
+
+
+
+                //RaycastHit[] hit = Physics.Raycast(transform.position, new Vector3(0, -1, 0), 20f);
 
             }
             if ((targetPosition - transform.position).sqrMagnitude <= 0.01f)
@@ -118,15 +129,21 @@ public class PlayerController : MonoBehaviour
                 isMoving = false;
             }
 
+
+
+
         }
     }
 
     public void MoveOnBridge(OnMoveOnBridge data)
     {
-        
-        Vector3 moveDirect = new Vector3(CalculateDirect2D.ChangeDirectToVector2Int(data.direct).x, 0f,
-         CalculateDirect2D.ChangeDirectToVector2Int(data.direct).y)*data.LengthMove;
-        targetPosition = transform.position + moveDirect;
+        if (isMoving)
+        {
+            return;
+        }
+
+
+        targetPosition = data.target;
 
         if ((targetPosition - transform.position).sqrMagnitude >= 0.01)
         {
@@ -140,31 +157,8 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(OnChangeStackAmount onChangeStackAmount)
     {
-       playerVisualTransform.localPosition = new Vector3(0f, onChangeStackAmount.numberStack*stackObjectController.OffsetY, 0f);
+        playerVisualTransform.localPosition = new Vector3(0f, onChangeStackAmount.numberStack * stackObjectController.OffsetY, 0f);
     }
-
-    #region Collision
-    public void OnTriggerEnter(Collider collider)
-    {
-        
-        if (collider.gameObject.CompareTag("stack"))
-        {
-            //Nếu gặp stack thì phá hủy stack ở đất và thêm vào khối stack player giữ
-            
-            // Sử dụng 1 biến bool để ngăn va chạm 2 lần do destroy chỉ được thực hiện vào frame sau
-            Destroy(collider.gameObject);
-            if (canHitStack)
-            {
-                stackObjectController.AddStackObject();
-                canHitStack = false;
-            }
-            
-
-        }
-    }
-    
-
-    #endregion
 
     void Start()
     {
@@ -174,7 +168,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         if (!isMoving) return;
-        if(!canHitStack) canHitStack = true;
+
         Move();
     }
 

@@ -5,15 +5,18 @@ TagManager:
   serializedVersion: 3
   tags:
   - stack
+  - Block
+  - CornerBrick
+  - Brick
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Bridge
   - Water
   - UI
-  - 
-  - 
+  - Wall
+  - Brick
   - 
   - 
   - 

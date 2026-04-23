@@ -9,16 +9,12 @@ public interface IEvent
 public struct OnChangeDirect: IEvent
 {
     public Direct direct;
-
-    public Vector2Int playerGridPosition;
-
-    public int areaId;
 }
 public struct OnMoveOnBridge: IEvent
 {
     public Direct direct;
 
-    public int LengthMove;
+    public Vector3 target;
 
 }
 public struct OnChangeTargetPositionPlayer: IEvent

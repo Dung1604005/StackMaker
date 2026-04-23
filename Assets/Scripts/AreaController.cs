@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Unity.VisualScripting;
 public class AreaController : MonoBehaviour
 {
+    [SerializeField] private GridSystem gridSystem;
     [SerializeField] private AreaContext areaCtx;
 
     [SerializeField] private GameObject blockPrefab;
@@ -19,22 +20,11 @@ public class AreaController : MonoBehaviour
 
     [SerializeField] private Vector2Int endGridPosition;
 
-    private Dictionary<Vector2Int, GameObject> blockDictionary = new Dictionary<Vector2Int, GameObject>();
-
     public Vector2Int StartGridPosition => startGridPosition;
 
     public Vector2Int EndGridPosition => endGridPosition;
 
     public AreaContext AreaCtx => areaCtx;
-
-    public void OnEnable()
-    {
-        EventBus<OnChangeDirect>.Subcribe(SlideInDirection);
-    }
-    public void OnDisable()
-    {
-        EventBus<OnChangeDirect>.UnSubcribe(SlideInDirection);
-    }
 
     [ContextMenu("Load Data")]
 
@@ -66,49 +56,50 @@ public class AreaController : MonoBehaviour
 
     public void GenerateGrid()
     {
-        blockDictionary.Clear();
-        
-
+  
         for (int x = 0; x < areaCtx.Height; x++)
         {
             for (int z = 0; z < areaCtx.Width; z++)
             {
                 BlockState blockState = areaCtx.Grid[x][z];
                 Vector3 worldPos = ConvertGridToWorldPosition(x, z);
+                int indexPrefab = 0;
+                Vector3 rotateEuler = Vector3.zero;
 
                 if (blockState == BlockState.Blocked)
                 {
-                    GameObject a = Instantiate(blockPrefab, worldPos, Quaternion.identity, transform);
+                    indexPrefab = 0;
                     
                 }
-                else if (blockState == BlockState.LeftTopCorner)
+                else if (blockState == BlockState.LeftTopCorner || blockState == BlockState.RightTopCorner ||
+                blockState == BlockState.LeftBottomCorner ||blockState == BlockState.RightBottomCorner )
                 {
-                    GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);
-                    a.transform.Rotate(new Vector3(0, 270f, 0));
-                    blockDictionary.Add(new Vector2Int(x, z), a);
-                }
-                else if (blockState == BlockState.RightTopCorner)
-                {
-                    GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);             
-                    blockDictionary.Add(new Vector2Int(x, z), a);
-                }
-                else if (blockState == BlockState.LeftBottomCorner)
-                {
-                    GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);
-                    a.transform.Rotate(new Vector3(0, 180f, 0));
-                    blockDictionary.Add(new Vector2Int(x, z), a);
-                }
-                else if (blockState == BlockState.RightBottomCorner)
-                {
-                    GameObject a = Instantiate(cornerPrefab, worldPos, Quaternion.identity, transform);
-                    a.transform.Rotate(new Vector3(0, 90f, 0));
-                    blockDictionary.Add(new Vector2Int(x, z), a);
+                    indexPrefab = 2;
+                    if(blockState == BlockState.LeftTopCorner)
+                    {
+                        rotateEuler = new Vector3(0, 270f, 0);    
+                    }
+                    else if(blockState == BlockState.LeftBottomCorner)
+                    {
+                        rotateEuler = new Vector3(0, 180f, 0);
+                    }
+                    else if(blockState == BlockState.RightBottomCorner)
+                    {
+                        rotateEuler = new Vector3(0, 90f, 0);
+                    }           
                 }
                 else 
                 {
-                    GameObject a = Instantiate(emptyPrefab, worldPos, Quaternion.identity, transform);
-                    blockDictionary.Add(new Vector2Int(x, z), a);
+                    indexPrefab = 1;
                 }
+                
+                BrickBase brickBase = gridSystem.GetBlockPrefab(indexPrefab);
+
+                BrickBase ob = PoolManager.Instance.Spawn<BrickBase>(brickBase, worldPos, Quaternion.identity);
+                ob.transform.SetParent(this.transform);
+                ob.SetInfo(blockState,rotateEuler);
+                
+
                 
             }
         }
@@ -140,71 +131,10 @@ public class AreaController : MonoBehaviour
         }
         return true;
     }
-    public Vector2Int GetNextPositionInGrid(Vector2Int gridPosition, Direct direct)
-    {
-        Vector2Int nextPos = Vector2Int.zero;
-        switch (direct)
-        {
-            case Direct.Back:
-                nextPos = new Vector2Int(gridPosition.x + 1, gridPosition.y);
-                break;
-            case Direct.Forward:
-                nextPos = new Vector2Int(gridPosition.x - 1, gridPosition.y);
-                break;
-            case Direct.Left:
-                nextPos = new Vector2Int(gridPosition.x, gridPosition.y - 1);
-                break;
-            default:
-                nextPos = new Vector2Int(gridPosition.x, gridPosition.y + 1);
-                break;
-
-        }
-        return nextPos;
-    }
-    public void SlideInDirection(OnChangeDirect onChangeDirect)
-    {
-        if(onChangeDirect.areaId != areaCtx.areaId)
-        {
-            return;
-        }
-        Vector2Int start = onChangeDirect.playerGridPosition;
-        Direct direct = onChangeDirect.direct;
-        Vector2Int current = start;
-
-
-        // Lặp đến khi thấy điểm kết thúc theo hướng direct cố định
-        for (int i = 0; i < 100; i++)
-        {
-
-            Vector2Int nextPos = GetNextPositionInGrid(current, direct);
-
-
-            if (!IsGridPositionValid(nextPos))
-            {
-                break;
-            }
-            if (areaCtx.Grid[nextPos.x][nextPos.y] == BlockState.Blocked)
-            {
-                break;
-            }
-            else
-            {
-                current = nextPos;
-            }
-        }
-        Debug.Log(current);
-        EventBus<OnChangeTargetPositionPlayer>.Raise(new OnChangeTargetPositionPlayer
-        {
-            GridPosition = current,
-            TargetPosition = ConvertGridToWorldPosition(current.x, current.y),
-            TargetBlockState = areaCtx.Grid[current.x][current.y]
-        });
-    }
 
     void Start()
     {
-        // LoadLevel("Level_01_01");
-        // GenerateGrid();
+        
         
     }
 

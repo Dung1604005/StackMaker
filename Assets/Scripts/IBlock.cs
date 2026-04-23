@@ -5,11 +5,7 @@ public interface IBlock
 {
     public Vector3 GetWorldPosition();
 
-    public Vector2 GetGridPosition();
-
     public BlockState GetBlockState();
-
-
 }
 
 [Serializable]

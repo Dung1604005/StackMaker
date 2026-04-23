@@ -135,6 +135,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: dimian2
       objectReference: {fileID: 0}
+    - target: {fileID: 1377948116806254, guid: d755cee1094bb6a48ab2a168d33fd112, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4463150112738913, guid: d755cee1094bb6a48ab2a168d33fd112, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -203,12 +207,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.6009941, y: 0.509437, z: 1.0840572}
-  m_Center: {x: 0.007393837, y: 0.018416196, z: -0.098899305}
+  m_Size: {x: 0.6009941, y: 0.509437, z: 2.5528252}
+  m_Center: {x: 0.007393837, y: 0.018416196, z: 0.63548505}
 --- !u!4 &7510139531218588362 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4463150112738913, guid: d755cee1094bb6a48ab2a168d33fd112, type: 3}
