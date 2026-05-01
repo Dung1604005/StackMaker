@@ -23,7 +23,7 @@ public struct OnChangeTargetPositionPlayer: IEvent
 
     public Vector2Int GridPosition;
 
-    public BlockState TargetBlockState;
+    public BrickState TargetBlockState;
 
 
 }

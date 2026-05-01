@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4084934151240149586}
   - component: {fileID: -1733462318668021140}
   m_Layer: 7
-  m_Name: bridge
+  m_Name: Bridge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bridge
   idBrick: 0
-  blockState: 4
+  brickState: 4
   interacted: 0
 --- !u!1 &2979040546808543011
 GameObject:

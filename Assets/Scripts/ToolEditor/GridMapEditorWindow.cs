@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEditor;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GridMapEditorWindow : EditorWindow
 {
@@ -9,8 +11,11 @@ public class GridMapEditorWindow : EditorWindow
     private Vector2Int gridSize = new Vector2Int(1, 1);
 
     private Vector3 originPosition = Vector3.zero;
-    
+
     private bool isMapCreated = false;
+
+    private IToolEditorState[] allToolStates;
+    private string[] tabNames;
 
     // Data for brick
 
@@ -20,14 +25,67 @@ public class GridMapEditorWindow : EditorWindow
     private string[] brickNames;
     private int selectedBrickIndex = 0;
 
+    private BrickBase previewBrick;
+
     // Cache data
 
-    private List<Pair<Vector2Int, BlockState>> mapBricks;
+    private IToolEditorState currentToolState;
 
-    private Dictionary<Vector2Int , bool> placedBrickDict;
+    private int currentTabIndex = 0;
+
+    private Dictionary<Vector2Int, BrickBase> placedBrickDict = new Dictionary<Vector2Int, BrickBase>();
 
     private Transform root;
-    
+
+    #region Getter
+
+    public Vector2Int GridSize => gridSize;
+
+
+    public BrickBase PreviewBrick => previewBrick;
+
+    public BrickBase[] AvailableBrick => availableBrick;
+
+    public int SelectedBrickIndex => selectedBrickIndex;
+
+    public string[] BrickNames => brickNames;
+
+    public Dictionary<Vector2Int, BrickBase> PlacedBrickDict => placedBrickDict;
+
+    public Transform Root => root;
+    #endregion
+
+    #region SETTER
+    public void SetRoot(Transform _root)
+    {
+        root = _root;
+    }
+
+    public void SetSelectedBrick(int index)
+    {
+        selectedBrickIndex = index;
+    }
+
+    #endregion
+
+    public void ChangeState(IToolEditorState newState)
+    {
+        //Exit old state to change to new state
+        if(currentToolState != null)
+        {
+            currentToolState.Exit();
+        }
+        
+
+        currentToolState = newState;
+
+        if(currentToolState != null)
+        {
+            currentToolState.Enter();
+        }
+        
+    }
+
 
     //Create menu item on Unity
     [MenuItem("Tools/Map Designer")]
@@ -57,27 +115,44 @@ public class GridMapEditorWindow : EditorWindow
         }
 
         EditorGUILayout.Space(10);
+        
+        
 
-        GUILayout.Label("CHỌN BRICK");
+        // Draw tool bar for choosing tool editor mode
+        EditorGUI.BeginChangeCheck();
+        currentTabIndex = GUILayout.Toolbar(currentTabIndex, tabNames, GUILayout.Height(30));
 
-        if(brickNames != null && brickNames.Length > 0)
+        // if user click another tab then change state
+        if (EditorGUI.EndChangeCheck())
         {
-            selectedBrickIndex = EditorGUILayout.Popup("Choosing block: ", selectedBrickIndex, brickNames);
+            // disable all focus
+            GUI.FocusControl(null); 
+            ChangeState(allToolStates[currentTabIndex]);            
         }
 
-        if (GUILayout.Button("Làm mới danh sách Gạch"))
+        GUILayout.Space(15);
+
+        //Draw UI for tool mode
+        if (currentToolState != null)
         {
-            LoadBricksFromAsset();
+            currentToolState.OnGUI();
+        }
+
+
+        EditorGUILayout.Space(10);
+        if (GUILayout.Button("Clear Map"))
+        {
+            ClearMap();
         }
 
     }
 
-    private void LoadBricksFromAsset()
+    public void LoadBricksFromAsset()
     {
-        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] {brickFolderPath});
+        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { brickFolderPath });
         List<BrickBase> validBricks = new List<BrickBase>();
 
-        foreach(string guid in guids)
+        foreach (string guid in guids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
 
@@ -90,7 +165,7 @@ public class GridMapEditorWindow : EditorWindow
         }
         availableBrick = validBricks.ToArray();
         brickNames = new string[availableBrick.Length];
-        for(int i = 0; i < availableBrick.Length; i++)
+        for (int i = 0; i < availableBrick.Length; i++)
         {
             brickNames[i] = availableBrick[i].gameObject.name;
         }
@@ -98,17 +173,17 @@ public class GridMapEditorWindow : EditorWindow
 
     private void CreateMap()
     {
-        Handles.color = new Color(0f, 1f, 1f, 0.8f);
+        Handles.color = Color.skyBlue;
         //Draw Grid map by draw x line horizontal and y line vertical
 
-        for(int row = 0; row <= gridSize.x; row++)
+        for (int row = 0; row <= gridSize.x; row++)
         {
-            Handles.DrawLine(new Vector3(-row, 0f, 0f), new Vector3(-row, 0f, -gridSize.y));
+            Handles.DrawLine(new Vector3(-row, 0.1f, 0f), new Vector3(-row, 0.1f, -gridSize.y));
         }
 
-        for(int collumn = 0; collumn <= gridSize.y; collumn++)
+        for (int collumn = 0; collumn <= gridSize.y; collumn++)
         {
-            Handles.DrawLine(new Vector3(0, 0f, -collumn), new Vector3(-gridSize.x, 0f, -collumn));
+            Handles.DrawLine(new Vector3(0, 0.1f, -collumn), new Vector3(-gridSize.x, 0.1f, -collumn));
         }
     }
 
@@ -116,26 +191,112 @@ public class GridMapEditorWindow : EditorWindow
     private void OnEnable()
     {
         SceneView.duringSceneGui += OnSceneGUI;
+
+        LoadBricksFromAsset();
+
+        UpdatePreviewObject();
+        //Init all ToolState
+        allToolStates = new IToolEditorState[]
+        {
+            new SelectToolState(this),  
+            new PaintToolState(this),   
+            new EraseToolState(this)    
+            
+        };
+
+        //Init tab name for each tool state
+
+        tabNames = new string[allToolStates.Length];
+        for(int i = 0 ; i < tabNames.Length; i++)
+        {
+            tabNames[i] = allToolStates[i].GetTabName();
+        }
+
+        //Init first tool state
+        currentTabIndex = 0;
+        ChangeState(allToolStates[currentTabIndex]);
     }
+
 
     private void OnDisable()
     {
         SceneView.duringSceneGui -= OnSceneGUI;
+        if (previewBrick != null)
+        {
+            DestroyImmediate(previewBrick.gameObject);
+        }
+        ClearMap();
     }
-
-    // Nơi bạn xử lý thao tác click chuột và vẽ lưới trên Scene 3D
     private void OnSceneGUI(SceneView sceneView)
     {
         //Draw map
         if (isMapCreated)
         {
             CreateMap();
-        } 
+        }
 
-             
+        currentToolState.OnSceneGUI(sceneView);
+
+       
+
+        sceneView.Repaint();
+
+
+    }
+
+    // Handle the preview visual for brick before place
+    public void UpdatePreviewObject()
+    {
+        if (previewBrick != null)
+        {
+            DestroyImmediate(previewBrick.gameObject);
+        }
+
+        if (availableBrick != null && availableBrick.Length == 0) return;
+
+        // create prefab
+        BrickBase selectedPrefab = availableBrick[selectedBrickIndex];
+        previewBrick = Instantiate(selectedPrefab);
+
+        //Make previewBrick invisible from Hierarchy and dont be saved in file 
+
+        previewBrick.gameObject.hideFlags = HideFlags.HideAndDontSave;
+
+        //Turn off all collider of gameobject and its child
+        Collider collider = previewBrick.GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        Collider[] colliders = previewBrick.GetComponentsInChildren<Collider>();
+        foreach (var col in colliders) col.enabled = false;
+
+
+    }
+
+    public void DrawHighLightCell(float x, float z, Color color)
+    {
+        Handles.color = color;
+        Vector3 p1 = new Vector3(x, 0.2f, z);
+        Vector3 p2 = new Vector3(x - 1, 0.2f, z);
+        Vector3 p3 = new Vector3(x - 1, 0.2f, z - 1);
+        Vector3 p4 = new Vector3(x, 0.2f, z - 1);
+        Handles.DrawLines(new Vector3[] { p1, p2, p2, p3, p3, p4, p4, p1 });
     }
 
 
+    private void ClearMap()
+    {
+        foreach (var brick in placedBrickDict.Values)
+        {
+            if (brick != null)
+            {
+                Undo.DestroyObjectImmediate(brick.gameObject);
+            }
+        }
+        placedBrickDict.Clear();
+    }
 }
 
 public struct Pair<T1, T2>
@@ -149,3 +310,4 @@ public struct Pair<T1, T2>
         Second = second;
     }
 }
+

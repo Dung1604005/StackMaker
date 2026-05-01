@@ -2,13 +2,14 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BrickBase : MonoBehaviour, IBlock, IPoolable
+public class BrickBase : MonoBehaviour, IBrick, IPoolable
 {
 
     [SerializeField] protected int idBrick;
-    [SerializeField] private BlockState blockState;
+    [SerializeField] private BrickState brickState;
 
     [SerializeField] protected bool interacted;
+
 
     public virtual void OnInit()
     {
@@ -26,14 +27,14 @@ public class BrickBase : MonoBehaviour, IBlock, IPoolable
         
         }
         interacted = false;
-        blockState = BlockState.Null;
+        brickState = BrickState.Null;
         this.transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
-    public void SetInfo(BlockState _blockState, Vector3 EulerRotate)
+    public void SetInfo(BrickState _blockState, Vector3 EulerRotate)
     {
 
-        blockState = _blockState;
+        brickState = _blockState;
 
         this.transform.Rotate(EulerRotate);
         
@@ -42,9 +43,9 @@ public class BrickBase : MonoBehaviour, IBlock, IPoolable
     {
         return transform.position;
     }
-    public BlockState GetBlockState()
+    public BrickState GetBrickState()
     {
-        return blockState;
+        return brickState;
     }
 
     public virtual void OnTriggerEnter(Collider collider)

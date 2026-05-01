@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (hit.collider.TryGetComponent<BrickBase>(out BrickBase brick))
                     {
-                        Direct nxtDirect = CalculateDirect2D.ChangeCornerToDirect(brick.GetBlockState(), direct);
+                        Direct nxtDirect = CalculateDirect2D.ChangeCornerToDirect(brick.GetBrickState(), direct);
                         if (nxtDirect == Direct.NULL)
                         {
                             //Place player to the middle of brick 

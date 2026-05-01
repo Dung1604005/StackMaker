@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 5400475116404220953}
   - component: {fileID: 602425519185860390}
   m_Layer: 7
-  m_Name: cornerBlock
+  m_Name: LeftTopCornerBrick
   m_TagString: CornerBrick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -116,7 +116,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4392442822002419207}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -8.07284, y: 0, z: 1.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -125,7 +125,7 @@ Transform:
   - {fileID: 8078884241681318825}
   - {fileID: 6775370402112699018}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!65 &5400475116404220953
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CornerBrick
   idBrick: 0
-  blockState: 0
+  brickState: 2
   interacted: 0
   anim: {fileID: 1285870221570316480}
 --- !u!1 &4505610011140968990

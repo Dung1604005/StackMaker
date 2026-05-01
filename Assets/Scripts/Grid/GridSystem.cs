@@ -95,7 +95,7 @@ public class GridSystem : MonoBehaviour
                 PoolManager.Instance.Spawn<BrickBase>(block, currentPosition + new Vector3(-1, 0, -0), Quaternion.identity);
             }
             
-            bridgePrefab.SetInfo(BlockState.Bridge, Vector3.zero);
+            bridgePrefab.SetInfo(BrickState.Bridge, Vector3.zero);
             
             currentPosition += direct;
         }

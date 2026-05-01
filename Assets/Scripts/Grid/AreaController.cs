@@ -57,29 +57,29 @@ public class AreaController : MonoBehaviour
             for (int z = 0; z < areaCtx.Width; z++)
             {
                 // Handle spawn brick and rotate if it is corner
-                BlockState blockState = areaCtx.Grid[x][z];
+                BrickState blockState = areaCtx.Grid[x][z];
                 Vector3 worldPos = ConvertGridToWorldPosition(x, z, originWorldPos);
                 int indexPrefab = 0;
                 Vector3 rotateEuler = Vector3.zero;
 
-                if (blockState == BlockState.Blocked)
+                if (blockState == BrickState.Blocked)
                 {
                     indexPrefab = GameConfig.ID_PREFAB_BLOCK;
                     
                 }
-                else if (blockState == BlockState.LeftTopCorner || blockState == BlockState.RightTopCorner ||
-                blockState == BlockState.LeftBottomCorner ||blockState == BlockState.RightBottomCorner )
+                else if (blockState == BrickState.LeftTopCorner || blockState == BrickState.RightTopCorner ||
+                blockState == BrickState.LeftBottomCorner ||blockState == BrickState.RightBottomCorner )
                 {
                     indexPrefab = GameConfig.ID_PREFAB_CORNER_BRICK;
-                    if(blockState == BlockState.LeftTopCorner)
+                    if(blockState == BrickState.LeftTopCorner)
                     {
                         rotateEuler = new Vector3(0, 270f, 0);    
                     }
-                    else if(blockState == BlockState.LeftBottomCorner)
+                    else if(blockState == BrickState.LeftBottomCorner)
                     {
                         rotateEuler = new Vector3(0, 180f, 0);
                     }
-                    else if(blockState == BlockState.RightBottomCorner)
+                    else if(blockState == BrickState.RightBottomCorner)
                     {
                         rotateEuler = new Vector3(0, 90f, 0);
                     }           

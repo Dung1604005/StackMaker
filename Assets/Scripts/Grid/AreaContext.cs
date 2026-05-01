@@ -17,7 +17,7 @@ public class AreaContext
 
     public int[] EndPosition;
 
-    public BlockState[][] Grid;
+    public BrickState[][] Grid;
 
     
 }

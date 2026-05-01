@@ -1,18 +1,18 @@
 using System;
 using UnityEngine;
 
-public interface IBlock
+public interface IBrick
 {
     public Vector3 GetWorldPosition();
 
-    public BlockState GetBlockState();
+    public BrickState GetBrickState();
 }
 
 [Serializable]
-public enum BlockState
+public enum BrickState
 {
     Null = -1,
-   Blocked = 0,
+    Blocked = 0,
     Empty = 1,
     LeftTopCorner = 2,
     HaveStack = 3,
@@ -25,5 +25,5 @@ public enum BlockState
 }
 public enum Direct
 {
-     Forward, Back, Right, Left, NULL
+    Forward, Back, Right, Left, NULL
 }

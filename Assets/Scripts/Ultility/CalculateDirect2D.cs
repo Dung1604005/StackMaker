@@ -49,11 +49,11 @@ public class CalculateDirect2D
         }
     }
 
-    public static Direct ChangeCornerToDirect(BlockState blockState, Direct currentDirect)
+    public static Direct ChangeCornerToDirect(BrickState blockState, Direct currentDirect)
     {
         switch (blockState)
         {
-            case BlockState.LeftTopCorner:
+            case BrickState.LeftTopCorner:
                if(currentDirect == Direct.Forward)
                 {
                     return Direct.Right;
@@ -66,7 +66,7 @@ public class CalculateDirect2D
                 {
                     return Direct.NULL;
                 }
-            case BlockState.RightTopCorner:
+            case BrickState.RightTopCorner:
                if(currentDirect == Direct.Forward)
                 {
                     return Direct.Left;
@@ -79,7 +79,7 @@ public class CalculateDirect2D
                 {
                     return Direct.NULL;
                 }
-            case BlockState.LeftBottomCorner:
+            case BrickState.LeftBottomCorner:
                if(currentDirect == Direct.Left)
                 {
                     return Direct.Forward;
@@ -92,7 +92,7 @@ public class CalculateDirect2D
                 {
                     return Direct.NULL;
                 }
-            case BlockState.RightBottomCorner:
+            case BrickState.RightBottomCorner:
                 if(currentDirect == Direct.Right)
                 {
                     return Direct.Forward;

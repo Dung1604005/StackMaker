@@ -26,6 +26,8 @@ public class GameConfig
 
     public static Vector3 CellSize = new Vector3(1f, 1f,1f);
 
+    public static Vector3 OriginPos = new Vector3(0f,0f,0f);
+
 
 
 }

@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 8873447934890038947}
   - component: {fileID: 2674565482693613548}
   m_Layer: 0
-  m_Name: emptyObject
+  m_Name: EmptyBrick
   m_TagString: Undefined
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 1
   interacted: 0
 --- !u!65 &2674565482693613548
 BoxCollider:
