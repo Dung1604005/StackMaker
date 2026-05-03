@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class GridMapEditorWindow : EditorWindow
 {
-    // --- CẤU HÌNH ---
+    // Data general
     private Vector2Int gridSize = new Vector2Int(1, 1);
 
     private Vector3 originPosition = Vector3.zero;
@@ -16,6 +16,16 @@ public class GridMapEditorWindow : EditorWindow
 
     private IToolEditorState[] allToolStates;
     private string[] tabNames;
+
+    //Data for map
+
+    private Dictionary<Vector2Int, BrickBase> placedBrickDict = new Dictionary<Vector2Int, BrickBase>();
+
+    private string currentMapName;
+
+    private int currentLevelId;
+
+    private Vector2Int startPosition;
 
     // Data for brick
 
@@ -32,8 +42,6 @@ public class GridMapEditorWindow : EditorWindow
     private IToolEditorState currentToolState;
 
     private int currentTabIndex = 0;
-
-    private Dictionary<Vector2Int, BrickBase> placedBrickDict = new Dictionary<Vector2Int, BrickBase>();
 
     private Transform root;
 
@@ -66,24 +74,47 @@ public class GridMapEditorWindow : EditorWindow
         selectedBrickIndex = index;
     }
 
+    public void AddBrick(Vector2Int gridPos, BrickBase brick)
+    {
+        //This pos have brick
+        if (placedBrickDict.ContainsKey(gridPos) && placedBrickDict[gridPos] != null)
+        {
+            return;
+        }
+
+        placedBrickDict.Add(gridPos, brick);
+    }
+    public void RemoveBrick(Vector2Int gridPos)
+    {
+        if (placedBrickDict.ContainsKey(gridPos))
+        {
+            BrickBase oldBrick = placedBrickDict[gridPos];
+
+            Undo.DestroyObjectImmediate(oldBrick.gameObject);
+
+            placedBrickDict.Remove(gridPos);
+        }
+
+    }
+
     #endregion
 
     public void ChangeState(IToolEditorState newState)
     {
         //Exit old state to change to new state
-        if(currentToolState != null)
+        if (currentToolState != null)
         {
             currentToolState.Exit();
         }
-        
+
 
         currentToolState = newState;
 
-        if(currentToolState != null)
+        if (currentToolState != null)
         {
             currentToolState.Enter();
         }
-        
+
     }
 
 
@@ -115,8 +146,8 @@ public class GridMapEditorWindow : EditorWindow
         }
 
         EditorGUILayout.Space(10);
-        
-        
+
+
 
         // Draw tool bar for choosing tool editor mode
         EditorGUI.BeginChangeCheck();
@@ -126,8 +157,8 @@ public class GridMapEditorWindow : EditorWindow
         if (EditorGUI.EndChangeCheck())
         {
             // disable all focus
-            GUI.FocusControl(null); 
-            ChangeState(allToolStates[currentTabIndex]);            
+            GUI.FocusControl(null);
+            ChangeState(allToolStates[currentTabIndex]);
         }
 
         GUILayout.Space(15);
@@ -198,16 +229,16 @@ public class GridMapEditorWindow : EditorWindow
         //Init all ToolState
         allToolStates = new IToolEditorState[]
         {
-            new SelectToolState(this),  
-            new PaintToolState(this),   
-            new EraseToolState(this)    
-            
+            new SelectToolState(this),
+            new PaintToolState(this),
+            new EraseToolState(this)
+
         };
 
         //Init tab name for each tool state
 
         tabNames = new string[allToolStates.Length];
-        for(int i = 0 ; i < tabNames.Length; i++)
+        for (int i = 0; i < tabNames.Length; i++)
         {
             tabNames[i] = allToolStates[i].GetTabName();
         }
@@ -237,7 +268,7 @@ public class GridMapEditorWindow : EditorWindow
 
         currentToolState.OnSceneGUI(sceneView);
 
-       
+
 
         sceneView.Repaint();
 
@@ -283,6 +314,25 @@ public class GridMapEditorWindow : EditorWindow
         Vector3 p3 = new Vector3(x - 1, 0.2f, z - 1);
         Vector3 p4 = new Vector3(x, 0.2f, z - 1);
         Handles.DrawLines(new Vector3[] { p1, p2, p2, p3, p3, p4, p4, p1 });
+    }
+
+    public void LoadDataAllMap()
+    {
+        
+
+    }
+
+    public void SaveMap()
+    {
+        LevelData levelData = new LevelData();
+
+        levelData.name = currentMapName;
+
+        levelData.levelId = currentLevelId;
+
+        levelData.mapSize = gridSize;
+
+
     }
 
 

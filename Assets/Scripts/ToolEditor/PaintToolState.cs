@@ -21,7 +21,7 @@ public class PaintToolState: IToolEditorState
 
     public void OnSceneGUI(SceneView sceneView)
     {
-        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+        //Make select default of unity disable
         HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
         Event e = Event.current;
@@ -97,11 +97,7 @@ public class PaintToolState: IToolEditorState
                 // If this position have brick but different type then remove it to let the new brick place in
                 if (selectedBrick.GetBrickState() != window.PlacedBrickDict[gridPos].GetBrickState())
                 {
-                    BrickBase oldBrick = window.PlacedBrickDict[gridPos];
-
-                    Undo.DestroyObjectImmediate(oldBrick.gameObject);
-
-                    window.PlacedBrickDict.Remove(gridPos);
+                   window.RemoveBrick(gridPos);
                 }
                 else
                 {
@@ -138,7 +134,7 @@ public class PaintToolState: IToolEditorState
 
         Undo.RegisterCreatedObjectUndo(brickObject.gameObject, "Brick Paint");
 
-        window.PlacedBrickDict.Add(gridPos, brickObject);
+        window.AddBrick(gridPos, brickObject);
     }
 
     public void OnGUI()
