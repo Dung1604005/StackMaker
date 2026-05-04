@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,5 +14,21 @@ public class BrickPrefabDataBase : ScriptableObject
             return brickBases[index];
         }
         return null;
+    }
+
+    public int Count()
+    {
+        return brickBases.Count;
+    }
+
+    public List<string> GetAllNamePrefab()
+    {
+        List<string> result = new List<string>();
+
+        foreach(BrickBase brickBase in brickBases)
+        {
+            result.Add(brickBase.GetName());
+        }
+        return result;
     }
 }

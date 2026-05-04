@@ -72,9 +72,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
+  nameBrick: 
   idBrick: 0
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &30718342577515425
 GameObject:
   m_ObjectHideFlags: 0
@@ -6700,9 +6702,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
+  nameBrick: 
   idBrick: 0
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &1269160660445254624
 GameObject:
   m_ObjectHideFlags: 0
@@ -15811,9 +15815,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
+  nameBrick: 
   idBrick: 0
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &1966324296324235757
 GameObject:
   m_ObjectHideFlags: 0
@@ -16067,9 +16073,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
+  nameBrick: 
   idBrick: 0
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &2260551596631918686
 GameObject:
   m_ObjectHideFlags: 0
@@ -26801,9 +26809,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8d625fdbc533e4f913ac2571e87244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WinArea
-  idBrick: 0
+  nameBrick: Win-Brick
+  idBrick: 5
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
   win1Particle: {fileID: 956198602522065821}
   win2Particle: {fileID: 7618568539873807954}
   chessClose: {fileID: 2119951729033378238}
@@ -37655,9 +37665,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
+  nameBrick: 
   idBrick: 0
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &6734846691660958345
 GameObject:
   m_ObjectHideFlags: 0
@@ -47444,9 +47456,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
+  nameBrick: 
   idBrick: 0
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &8841202653465650728
 GameObject:
   m_ObjectHideFlags: 0
@@ -50407,9 +50421,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
+  nameBrick: 
   idBrick: 0
   brickState: 0
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &9054327614739813995
 GameObject:
   m_ObjectHideFlags: 0

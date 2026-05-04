@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
 {
-
+    [SerializeField] protected string nameBrick;
     [SerializeField] protected int idBrick;
     [SerializeField] protected BrickState brickState;
 
@@ -49,6 +49,11 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
     public BrickState GetBrickState()
     {
         return brickState;
+    }
+
+    public string GetName()
+    {
+        return nameBrick;
     }
 
     public virtual void RotateBrick(Vector3 eulerRotate)

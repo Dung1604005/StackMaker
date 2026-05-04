@@ -69,9 +69,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca911463c51de2e4681aec27094398d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bridge
-  idBrick: 0
+  nameBrick: Bridge-Brick
+  idBrick: 1
   brickState: 4
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &2979040546808543011
 GameObject:
   m_ObjectHideFlags: 0

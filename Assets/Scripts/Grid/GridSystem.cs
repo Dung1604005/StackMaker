@@ -10,8 +10,6 @@ public class GridSystem : MonoBehaviour
 
     [SerializeField] private LevelDataSO levelData;
 
-    [SerializeField] private List<BrickBase> listBrickPrefab;
-
     [SerializeField] private BrickPrefabDataBase brickPrefabDataBase;
 
     public LevelDataSO GetLevelData()
@@ -21,7 +19,7 @@ public class GridSystem : MonoBehaviour
 
     public void OnInit()
     {
-        
+        GenerateGrid(levelData);
     }
     public void GenerateGrid(LevelDataSO levelDataSO)
     {

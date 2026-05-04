@@ -137,9 +137,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brick
-  idBrick: 0
+  nameBrick: Start-Brick
+  idBrick: 4
   brickState: 5
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
 --- !u!65 &2674565482693613548
 BoxCollider:
   m_ObjectHideFlags: 0

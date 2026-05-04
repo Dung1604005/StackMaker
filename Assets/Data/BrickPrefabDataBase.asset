@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52bcb0bcbede73a438be19583897af73, type: 3}
+  m_Name: BrickPrefabDataBase
+  m_EditorClassIdentifier: Assembly-CSharp::BrickPrefabDataBase
+  brickBases:
+  - {fileID: -4587740763275751133, guid: 118fa1bd71722764dabef3ccfae27ee7, type: 3}
+  - {fileID: -1733462318668021140, guid: 152700cd1d6ccaf4984801b1cb6858f1, type: 3}
+  - {fileID: 602425519185860390, guid: 08ad82ffca119044db2912ee4f7a29c2, type: 3}
+  - {fileID: 8873447934890038947, guid: 15cc18f24d5ae2141aeb07a538043eb9, type: 3}
+  - {fileID: 8873447934890038947, guid: ae3ade63cbc10e748b7213f6428d4f47, type: 3}
+  - {fileID: 5279345753166391146, guid: 6d8649225f988b14f89f34e880bb9934, type: 3}

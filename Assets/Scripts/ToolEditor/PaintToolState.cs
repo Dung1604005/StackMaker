@@ -86,11 +86,11 @@ public class PaintToolState : IToolEditorState
     private void PlaceBrick(Vector2Int gridPos)
     {
         // Check there is any brick is choosed ?
-        if (window.AvailableBrick != null && window.AvailableBrick.Length == 0) return;
-        if (window.SelectedBrickIndex < 0 || window.SelectedBrickIndex >= window.AvailableBrick.Length) return;
+        if (window.BrickPrefabDataBase != null && window.BrickPrefabDataBase.Count() == 0) return;
+        if (window.SelectedBrickIndex < 0 || window.SelectedBrickIndex >= window.BrickPrefabDataBase.Count()) return;
 
 
-        BrickBase selectedBrick = window.AvailableBrick[window.SelectedBrickIndex];
+        BrickBase selectedBrick = window.BrickPrefabDataBase.GetBrickPrefab(window.SelectedBrickIndex);
 
         // Check if this pos is empty ?
         if (window.PlacedBrickDict.ContainsKey(gridPos))

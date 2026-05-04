@@ -37,7 +37,7 @@ public class GridMapEditorWindow : EditorWindow
     // Data for brick
 
     private string brickFolderPath = "Assets/Prefabs/MapBricks";
-    private BrickBase[] availableBrick;
+    private BrickPrefabDataBase brickPrefabDataBase;
 
     private string[] brickNames;
     private int selectedBrickIndex = 0;
@@ -59,7 +59,7 @@ public class GridMapEditorWindow : EditorWindow
 
     public BrickBase PreviewBrick => previewBrick;
 
-    public BrickBase[] AvailableBrick => availableBrick;
+    public BrickPrefabDataBase BrickPrefabDataBase => brickPrefabDataBase;
 
     public int SelectedBrickIndex => selectedBrickIndex;
 
@@ -142,25 +142,18 @@ public class GridMapEditorWindow : EditorWindow
 
 
     {
-        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { brickFolderPath });
-        List<BrickBase> validBricks = new List<BrickBase>();
+        string[] guids = AssetDatabase.FindAssets("t:BrickPrefabDataBase");
 
-        foreach (string guid in guids)
+        if (guids.Length > 0)
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
+            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
 
-            GameObject prefabAsset = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            if (prefabAsset != null)
+            brickPrefabDataBase = AssetDatabase.LoadAssetAtPath<BrickPrefabDataBase>(path);
+
+            if (brickPrefabDataBase != null)
             {
-                BrickBase brickComponent = prefabAsset.GetComponent<BrickBase>();
-                if (brickComponent != null) validBricks.Add(brickComponent);
+                brickNames = brickPrefabDataBase.GetAllNamePrefab().ToArray();
             }
-        }
-        availableBrick = validBricks.ToArray();
-        brickNames = new string[availableBrick.Length];
-        for (int i = 0; i < availableBrick.Length; i++)
-        {
-            brickNames[i] = availableBrick[i].gameObject.name;
         }
     }
     // Handle the preview visual for brick before place
@@ -171,10 +164,10 @@ public class GridMapEditorWindow : EditorWindow
             DestroyImmediate(previewBrick.gameObject);
         }
 
-        if (availableBrick != null && availableBrick.Length == 0) return;
+        if (brickPrefabDataBase != null && brickPrefabDataBase.Count() == 0) return;
 
         // create prefab
-        BrickBase selectedPrefab = availableBrick[selectedBrickIndex];
+        BrickBase selectedPrefab = brickPrefabDataBase.GetBrickPrefab(selectedBrickIndex);
         previewBrick = Instantiate(selectedPrefab);
 
         //Make previewBrick invisible from Hierarchy and dont be saved in file 
@@ -243,11 +236,11 @@ public class GridMapEditorWindow : EditorWindow
             levelDataSO = ScriptableObject.CreateInstance<LevelDataSO>();
         }
 
-        if(currentMapMode == 0)
+        if (currentMapMode == 0)
         {
             LoadNewLevel();
         }
-        
+
         levelDataSO.nameLevel = currentMapName;
 
         levelDataSO.levelId = currentLevelId;
@@ -326,10 +319,14 @@ public class GridMapEditorWindow : EditorWindow
         placedBrickDict.Clear();
         placedBrickDict = new Dictionary<Vector2Int, BrickBase>();
 
-        foreach(BrickSaveData brickSaveData in levelDataSO.brickSaveDatas)
+        foreach (BrickSaveData brickSaveData in levelDataSO.brickSaveDatas)
         {
-            placedBrickDict.Add(new Vector2Int(brickSaveData.x, brickSaveData.y), availableBrick[brickSaveData.IdBrick]);
+            BrickBase brick = brickPrefabDataBase.GetBrickPrefab(brickSaveData.IdBrick);
+            brick.SetEulerRotation(brickSaveData.eulerRotate);
+            placedBrickDict.Add(new Vector2Int(brickSaveData.x, brickSaveData.y), brick);
         }
+
+        LoadMap();
 
     }
 
@@ -337,9 +334,31 @@ public class GridMapEditorWindow : EditorWindow
     {
         currentLevelId = levelDataBaseSO.GetCountLevel();
 
-        currentMapName = "Level-"+(currentLevelId +1);
+        currentMapName = "Level-" + (currentLevelId + 1);
 
-        
+
+    }
+
+    public void LoadMap()
+    {
+        foreach (var brickData in placedBrickDict)
+        {
+            Vector2Int gridPos = brickData.Key;
+
+            if(brickData.Value == null)
+            {
+                continue;
+            }
+            Vector3 worldPos = GridHelper.ConvertGridToWorldPosition(gridPos.x, gridPos.y, GameConfig.OriginPos);
+            int indexPrefab = brickData.Value.GetBrickId();
+            Vector3 rotateEuler =brickData.Value.GetEulerRotation();
+
+            BrickBase brickBase = brickPrefabDataBase.GetBrickPrefab(indexPrefab);
+
+            BrickBase ob = PoolManager.Instance.Spawn<BrickBase>(brickBase, worldPos, Quaternion.Euler(rotateEuler));
+            ob.SetEulerRotation(rotateEuler);
+            ob.transform.SetParent(root.transform);
+        }
     }
 
     #endregion
@@ -353,9 +372,16 @@ public class GridMapEditorWindow : EditorWindow
         currentLevelId = EditorGUILayout.Popup("Choosing Level: ", currentLevelId, allLevelName.ToArray());
 
         EditorGUILayout.Space(10);
+
+        if (GUILayout.Button("Làm mới danh sách Level"))
+        {
+            LoadDatabase();
+        }
+
+        EditorGUILayout.Space(15);
         if (EditorGUI.EndChangeCheck())
         {
-                     
+
             LoadCurrentLevel(levelDataBaseSO.GetLevel(currentLevelId));
 
             EditorGUILayout.Space(10);
@@ -508,7 +534,7 @@ public class GridMapEditorWindow : EditorWindow
         {
             DestroyImmediate(previewBrick.gameObject);
         }
-        
+
     }
     private void OnSceneGUI(SceneView sceneView)
     {

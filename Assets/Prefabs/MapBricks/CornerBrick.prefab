@@ -159,9 +159,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f2d28d437a60547a0a16aca29cb078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CornerBrick
-  idBrick: 0
+  nameBrick: Corner-Brick
+  idBrick: 2
   brickState: 7
   interacted: 0
+  eulerRotation: {x: 0, y: 0, z: 0}
   anim: {fileID: 1285870221570316480}
 --- !u!1 &4505610011140968990
 GameObject:

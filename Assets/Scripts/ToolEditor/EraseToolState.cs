@@ -56,8 +56,9 @@ public class EraseToolState: IToolEditorState
     public void EraseBrick(Vector2Int gridPos)
     {
          // Check there is any brick is choosed ?
-        if(window.AvailableBrick != null && window.AvailableBrick.Length == 0)return;
-        if (window.SelectedBrickIndex < 0 || window.SelectedBrickIndex >= window.AvailableBrick.Length) return;
+       // Check there is any brick is choosed ?
+        if (window.BrickPrefabDataBase != null && window.BrickPrefabDataBase.Count() == 0) return;
+        if (window.SelectedBrickIndex < 0 || window.SelectedBrickIndex >= window.BrickPrefabDataBase.Count()) return;
 
         // Check if this pos is empty ?
         if(window.PlacedBrickDict.ContainsKey(gridPos) )
