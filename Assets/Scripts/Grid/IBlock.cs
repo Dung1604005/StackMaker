@@ -6,6 +6,10 @@ public interface IBrick
     public Vector3 GetWorldPosition();
 
     public BrickState GetBrickState();
+
+    public int GetBrickId();
+
+    public Vector3 GetEulerRotation();
 }
 
 [Serializable]

@@ -2,11 +2,11 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BrickBase : MonoBehaviour, IBrick, IPoolable
+public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
 {
 
     [SerializeField] protected int idBrick;
-    [SerializeField] private BrickState brickState;
+    [SerializeField] protected BrickState brickState;
 
     [SerializeField] protected bool interacted;
 
@@ -46,6 +46,21 @@ public class BrickBase : MonoBehaviour, IBrick, IPoolable
     public BrickState GetBrickState()
     {
         return brickState;
+    }
+
+    public virtual void RotateBrick(Vector3 eulerRotate)
+    {
+         this.transform.Rotate(eulerRotate);
+    }
+
+    public Vector3 GetEulerRotation()
+    {
+        return transform.eulerAngles;
+    }
+
+    public int GetBrickId()
+    {
+        return idBrick;
     }
 
     public virtual void OnTriggerEnter(Collider collider)

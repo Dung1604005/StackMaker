@@ -125,7 +125,7 @@ public class GridMapEditorWindow : EditorWindow
         GetWindow<GridMapEditorWindow>("Map Designer");
     }
 
-
+    #region GUI
     //UI on inspector
 
     private void OnGUI()
@@ -170,13 +170,28 @@ public class GridMapEditorWindow : EditorWindow
         }
 
 
-        EditorGUILayout.Space(10);
+        EditorGUILayout.Space(15);
         if (GUILayout.Button("Clear Map"))
         {
-            ClearMap();
+            if (!EditorUtility.DisplayDialog("Warning", "Are you sure want to CLEAR map ?", "Ok", "Nah"))
+            {
+                ClearMap();
+            }
+            
+        }
+
+        EditorGUILayout.Space(15);
+        if (GUILayout.Button("Save"))
+        {
+            if (EditorUtility.DisplayDialog("Confirm", "Are you sure want to save this map", "Ok", "No"))
+            {
+                SaveMap();
+            }
         }
 
     }
+
+    #endregion
 
     public void LoadBricksFromAsset()
     {
@@ -267,9 +282,7 @@ public class GridMapEditorWindow : EditorWindow
         }
 
         currentToolState.OnSceneGUI(sceneView);
-
-
-
+        
         sceneView.Repaint();
 
 
@@ -318,7 +331,7 @@ public class GridMapEditorWindow : EditorWindow
 
     public void LoadDataAllMap()
     {
-        
+
 
     }
 
@@ -331,6 +344,43 @@ public class GridMapEditorWindow : EditorWindow
         levelData.levelId = currentLevelId;
 
         levelData.mapSize = gridSize;
+
+        List<BrickSaveData> brickSaveDatas = new List<BrickSaveData>();
+
+        int countStartPosition = 0;
+        foreach (var item in placedBrickDict)
+        {
+            if (item.Value != null)
+            {
+                brickSaveDatas.Add(new BrickSaveData
+                {
+                    x = item.Key.x,
+                    y = item.Key.y,
+                    IdBrick = item.Value.GetBrickId()
+                });
+
+                if (item.Value.GetBrickState() == BrickState.StartBlock)
+                {
+                    countStartPosition += 1;
+                }
+            }
+        }
+        if (countStartPosition == 1)
+        {
+
+        }
+        else if (countStartPosition > 1)
+        {
+            EditorUtility.DisplayDialog("Warning", "Your map have more than 1 start position", "Ok", "No");
+            return;
+        }
+        else
+        {
+            EditorUtility.DisplayDialog("Warning", "Your map have no start position", "Ok", "No");
+            return;
+        }
+
+
 
 
     }

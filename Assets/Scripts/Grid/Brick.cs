@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Brick : BrickBase
 {
+    
     public override void OnTriggerEnter(Collider collider)
     {
         if (interacted)

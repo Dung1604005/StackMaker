@@ -13,6 +13,39 @@ public class CornerBrick : BrickBase
     {
         anim.SetTrigger(nameAnim);
     }
+    public override void RotateBrick(Vector3 eulerRotate)
+    {
+        this.transform.Rotate(eulerRotate);
+
+        int n = 360;
+
+        
+        int currentAngle =Mathf.RoundToInt(transform.eulerAngles.y);
+
+        int normalizeAngle = ((currentAngle % n ) + n )%n;
+
+        Debug.Log(normalizeAngle);
+        if(normalizeAngle == 0)
+        {
+            brickState = BrickState.RightTopCorner;
+        }
+        else if(normalizeAngle == 90)
+        {
+            brickState = BrickState.RightBottomCorner;
+        }
+        else if(normalizeAngle == 180)
+        {
+            brickState = BrickState.LeftBottomCorner;
+        }
+        else if(normalizeAngle == 270)
+        {
+            brickState = BrickState.LeftTopCorner;
+        }
+        else
+        {
+            Debug.Log("Angle is not valid");
+        }
+    }
     public override void OnTriggerEnter(Collider collider)
     {
 
