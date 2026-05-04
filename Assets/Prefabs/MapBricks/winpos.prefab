@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5672576945739931097}
   - component: {fileID: 3526898519652255744}
-  - component: {fileID: 8832111042901449282}
+  - component: {fileID: 6270777429243137461}
   m_Layer: 6
   m_Name: zhangai (25)
   m_TagString: Block
@@ -60,7 +60,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.3311586, z: 1}
   m_Center: {x: 0, y: 2.2659774, z: 0}
---- !u!114 &8832111042901449282
+--- !u!114 &6270777429243137461
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,11 +69,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 23119106923127894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299cf666d7cb7f4b8160a222f315c87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BrickBase
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 0
   interacted: 0
 --- !u!1 &30718342577515425
 GameObject:
@@ -6638,7 +6638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2279329665723767956}
   - component: {fileID: 6098785237584012323}
-  - component: {fileID: 3534169694466655327}
+  - component: {fileID: 2637326412086402991}
   m_Layer: 6
   m_Name: zhangai (26)
   m_TagString: Block
@@ -6688,7 +6688,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.5150003, z: 1}
   m_Center: {x: 0, y: 2.2725005, z: 0}
---- !u!114 &3534169694466655327
+--- !u!114 &2637326412086402991
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6697,11 +6697,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1263176716460661747}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299cf666d7cb7f4b8160a222f315c87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BrickBase
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 0
   interacted: 0
 --- !u!1 &1269160660445254624
 GameObject:
@@ -15749,7 +15749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5440239030014751947}
   - component: {fileID: 9213167243899265138}
-  - component: {fileID: 3633198596567545272}
+  - component: {fileID: 4124821687198343007}
   m_Layer: 6
   m_Name: zhangai (21)
   m_TagString: Block
@@ -15799,7 +15799,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.2661994, z: 1}
   m_Center: {x: 0, y: 2.610283, z: 0}
---- !u!114 &3633198596567545272
+--- !u!114 &4124821687198343007
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15808,11 +15808,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1962477984451225229}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299cf666d7cb7f4b8160a222f315c87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BrickBase
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 0
   interacted: 0
 --- !u!1 &1966324296324235757
 GameObject:
@@ -16005,7 +16005,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3992850430058825604}
   - component: {fileID: 7812277860635729158}
-  - component: {fileID: 141889881895932130}
+  - component: {fileID: 7644921006335194017}
   m_Layer: 6
   m_Name: zhangai (24)
   m_TagString: Block
@@ -16055,7 +16055,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.4380302, z: 1}
   m_Center: {x: 0, y: 2.2646132, z: 0}
---- !u!114 &141889881895932130
+--- !u!114 &7644921006335194017
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -16064,11 +16064,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2206557459292852132}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299cf666d7cb7f4b8160a222f315c87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BrickBase
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 0
   interacted: 0
 --- !u!1 &2260551596631918686
 GameObject:
@@ -26801,6 +26801,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8d625fdbc533e4f913ac2571e87244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WinArea
+  idBrick: 0
+  brickState: 0
+  interacted: 0
   win1Particle: {fileID: 956198602522065821}
   win2Particle: {fileID: 7618568539873807954}
   chessClose: {fileID: 2119951729033378238}
@@ -37590,7 +37593,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3039261856901508036}
   - component: {fileID: 9203614338431344837}
-  - component: {fileID: 5437979860808480505}
+  - component: {fileID: 7566012591182882386}
   m_Layer: 6
   m_Name: zhangai (27)
   m_TagString: Block
@@ -37640,7 +37643,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.813725, z: 1}
   m_Center: {x: 0, y: 2.2108667, z: 0}
---- !u!114 &5437979860808480505
+--- !u!114 &7566012591182882386
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -37649,11 +37652,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6686630079116307407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299cf666d7cb7f4b8160a222f315c87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BrickBase
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 0
   interacted: 0
 --- !u!1 &6734846691660958345
 GameObject:
@@ -47379,7 +47382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8345607225089501144}
   - component: {fileID: 7244584798212716832}
-  - component: {fileID: 2223364749648152338}
+  - component: {fileID: 3799172031643179630}
   m_Layer: 6
   m_Name: zhangai (22)
   m_TagString: Block
@@ -47429,7 +47432,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.1210613, z: 1}
   m_Center: {x: 0, y: 2.6116676, z: 0}
---- !u!114 &2223364749648152338
+--- !u!114 &3799172031643179630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47438,11 +47441,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8832005441912533581}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299cf666d7cb7f4b8160a222f315c87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BrickBase
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 0
   interacted: 0
 --- !u!1 &8841202653465650728
 GameObject:
@@ -50342,7 +50345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2061256787624490542}
   - component: {fileID: 3505524925625738446}
-  - component: {fileID: 6040949014318828072}
+  - component: {fileID: 3548308532827364496}
   m_Layer: 6
   m_Name: zhangai (23)
   m_TagString: Block
@@ -50392,7 +50395,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.7371948, z: 1}
   m_Center: {x: 0, y: 2.483828, z: 0}
---- !u!114 &6040949014318828072
+--- !u!114 &3548308532827364496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -50401,11 +50404,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 9009934659399384940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299cf666d7cb7f4b8160a222f315c87, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d4b93a1ec0f3f14987433c0b419a1b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BrickBase
+  m_EditorClassIdentifier: Assembly-CSharp::Brick
   idBrick: 0
-  blockState: 0
+  brickState: 0
   interacted: 0
 --- !u!1 &9054327614739813995
 GameObject:

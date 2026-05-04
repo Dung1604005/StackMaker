@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WinArea : MonoBehaviour
+public class WinArea : BrickBase
 {
     [SerializeField] private ParticleSystem win1Particle;
 
@@ -10,8 +10,9 @@ public class WinArea : MonoBehaviour
 
     [SerializeField] private GameObject chessOpen;
 
-    public void OnInit()
+    public override void OnInit()
     {
+        base.OnInit();
         win1Particle.Pause();
         win2Particle.Pause();
         chessClose.SetActive(true);
@@ -32,7 +33,7 @@ public class WinArea : MonoBehaviour
         });
     }
 
-    public void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(GameConfig.PLAYER_TAG))
         {

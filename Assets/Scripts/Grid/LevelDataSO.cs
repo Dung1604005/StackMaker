@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-
-public class LevelData
+[CreateAssetMenu(fileName = "NewMapLevel", menuName = "Game Data/Map Level")]
+public class LevelDataSO : ScriptableObject
 {
     
-    public string name;
+    public string nameLevel;
 
     public Vector2Int mapSize;
 
@@ -27,5 +26,7 @@ public struct BrickSaveData
     public int x;
     
     public int y;
+
+    public Vector3 eulerRotate;
 
 }

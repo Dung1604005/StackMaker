@@ -10,6 +10,7 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
 
     [SerializeField] protected bool interacted;
 
+    [SerializeField] protected Vector3 eulerRotation;
 
     public virtual void OnInit()
     {
@@ -37,6 +38,8 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
         brickState = _blockState;
 
         this.transform.Rotate(EulerRotate);
+
+        eulerRotation = EulerRotate;
         
     }
     public Vector3 GetWorldPosition()
@@ -50,12 +53,19 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
 
     public virtual void RotateBrick(Vector3 eulerRotate)
     {
+        this.eulerRotation += eulerRotate;
          this.transform.Rotate(eulerRotate);
     }
 
     public Vector3 GetEulerRotation()
     {
-        return transform.eulerAngles;
+        return eulerRotation;
+    }
+
+    public void SetEulerRotation(Vector3 eulerRotation)
+    {
+        this.eulerRotation = eulerRotation;
+        this.transform.eulerAngles = eulerRotation;
     }
 
     public int GetBrickId()

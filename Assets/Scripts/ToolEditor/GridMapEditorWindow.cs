@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Unity.Collections;
 using UnityEditor;
 using UnityEditor.ShaderGraph.Internal;
@@ -18,6 +19,12 @@ public class GridMapEditorWindow : EditorWindow
     private string[] tabNames;
 
     //Data for map
+
+    private int currentMapMode = 0;
+
+    private List<string> allLevelName = new List<string>();
+
+    private LevelDataBaseSO levelDataBaseSO;
 
     private Dictionary<Vector2Int, BrickBase> placedBrickDict = new Dictionary<Vector2Int, BrickBase>();
 
@@ -90,7 +97,11 @@ public class GridMapEditorWindow : EditorWindow
         {
             BrickBase oldBrick = placedBrickDict[gridPos];
 
-            Undo.DestroyObjectImmediate(oldBrick.gameObject);
+            if (oldBrick != null && oldBrick.gameObject != null)
+            {
+                DestroyImmediate(oldBrick.gameObject);
+            }
+
 
             placedBrickDict.Remove(gridPos);
         }
@@ -125,75 +136,11 @@ public class GridMapEditorWindow : EditorWindow
         GetWindow<GridMapEditorWindow>("Map Designer");
     }
 
-    #region GUI
-    //UI on inspector
-
-    private void OnGUI()
-    {
-
-
-        GUILayout.Label("EDIT SIZE OF MAP (Square Size)");
-
-        gridSize.x = EditorGUILayout.IntField("Size X:", gridSize.x);
-        gridSize.y = EditorGUILayout.IntField("Size Y:", gridSize.y);
-
-        EditorGUILayout.Space(10);
-        if (GUILayout.Button("Create Map"))
-        {
-            //Draw map again
-            isMapCreated = true;
-            SceneView.RepaintAll();
-        }
-
-        EditorGUILayout.Space(10);
-
-
-
-        // Draw tool bar for choosing tool editor mode
-        EditorGUI.BeginChangeCheck();
-        currentTabIndex = GUILayout.Toolbar(currentTabIndex, tabNames, GUILayout.Height(30));
-
-        // if user click another tab then change state
-        if (EditorGUI.EndChangeCheck())
-        {
-            // disable all focus
-            GUI.FocusControl(null);
-            ChangeState(allToolStates[currentTabIndex]);
-        }
-
-        GUILayout.Space(15);
-
-        //Draw UI for tool mode
-        if (currentToolState != null)
-        {
-            currentToolState.OnGUI();
-        }
-
-
-        EditorGUILayout.Space(15);
-        if (GUILayout.Button("Clear Map"))
-        {
-            if (!EditorUtility.DisplayDialog("Warning", "Are you sure want to CLEAR map ?", "Ok", "Nah"))
-            {
-                ClearMap();
-            }
-            
-        }
-
-        EditorGUILayout.Space(15);
-        if (GUILayout.Button("Save"))
-        {
-            if (EditorUtility.DisplayDialog("Confirm", "Are you sure want to save this map", "Ok", "No"))
-            {
-                SaveMap();
-            }
-        }
-
-    }
-
-    #endregion
+    #region SAVE AND LOAD
 
     public void LoadBricksFromAsset()
+
+
     {
         string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { brickFolderPath });
         List<BrickBase> validBricks = new List<BrickBase>();
@@ -216,78 +163,6 @@ public class GridMapEditorWindow : EditorWindow
             brickNames[i] = availableBrick[i].gameObject.name;
         }
     }
-
-    private void CreateMap()
-    {
-        Handles.color = Color.skyBlue;
-        //Draw Grid map by draw x line horizontal and y line vertical
-
-        for (int row = 0; row <= gridSize.x; row++)
-        {
-            Handles.DrawLine(new Vector3(-row, 0.1f, 0f), new Vector3(-row, 0.1f, -gridSize.y));
-        }
-
-        for (int collumn = 0; collumn <= gridSize.y; collumn++)
-        {
-            Handles.DrawLine(new Vector3(0, 0.1f, -collumn), new Vector3(-gridSize.x, 0.1f, -collumn));
-        }
-    }
-
-    // Subcribe event to draw on Scene view
-    private void OnEnable()
-    {
-        SceneView.duringSceneGui += OnSceneGUI;
-
-        LoadBricksFromAsset();
-
-        UpdatePreviewObject();
-        //Init all ToolState
-        allToolStates = new IToolEditorState[]
-        {
-            new SelectToolState(this),
-            new PaintToolState(this),
-            new EraseToolState(this)
-
-        };
-
-        //Init tab name for each tool state
-
-        tabNames = new string[allToolStates.Length];
-        for (int i = 0; i < tabNames.Length; i++)
-        {
-            tabNames[i] = allToolStates[i].GetTabName();
-        }
-
-        //Init first tool state
-        currentTabIndex = 0;
-        ChangeState(allToolStates[currentTabIndex]);
-    }
-
-
-    private void OnDisable()
-    {
-        SceneView.duringSceneGui -= OnSceneGUI;
-        if (previewBrick != null)
-        {
-            DestroyImmediate(previewBrick.gameObject);
-        }
-        ClearMap();
-    }
-    private void OnSceneGUI(SceneView sceneView)
-    {
-        //Draw map
-        if (isMapCreated)
-        {
-            CreateMap();
-        }
-
-        currentToolState.OnSceneGUI(sceneView);
-        
-        sceneView.Repaint();
-
-
-    }
-
     // Handle the preview visual for brick before place
     public void UpdatePreviewObject()
     {
@@ -329,21 +204,57 @@ public class GridMapEditorWindow : EditorWindow
         Handles.DrawLines(new Vector3[] { p1, p2, p2, p3, p3, p4, p4, p1 });
     }
 
-    public void LoadDataAllMap()
+    public void LoadDatabase()
     {
+        string[] guids = AssetDatabase.FindAssets("t:LevelDataBaseSO");
+
+        if (guids.Length > 0)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+
+            levelDataBaseSO = AssetDatabase.LoadAssetAtPath<LevelDataBaseSO>(path);
+
+            if (levelDataBaseSO != null)
+            {
+                allLevelName = levelDataBaseSO.GetAllNameLevel();
+            }
+        }
 
 
     }
 
     public void SaveMap()
     {
-        LevelData levelData = new LevelData();
+        string path = EditorUtility.SaveFilePanelInProject("Save Level", "Level_01", "asset", "Choose save location");
 
-        levelData.name = currentMapName;
 
-        levelData.levelId = currentLevelId;
+        if (string.IsNullOrEmpty(path))
+        {
+            return;
+        }
 
-        levelData.mapSize = gridSize;
+        //Check if this path have a SO ?
+
+        LevelDataSO levelDataSO = AssetDatabase.LoadAssetAtPath<LevelDataSO>(path);
+
+        if (levelDataSO == null)
+        {
+            // Create a SO
+            levelDataSO = ScriptableObject.CreateInstance<LevelDataSO>();
+        }
+
+        if(currentMapMode == 0)
+        {
+            LoadNewLevel();
+        }
+        
+        levelDataSO.nameLevel = currentMapName;
+
+        levelDataSO.levelId = currentLevelId;
+
+        levelDataSO.mapSize = gridSize;
+
+        levelDataSO.brickSaveDatas.Clear();
 
         List<BrickSaveData> brickSaveDatas = new List<BrickSaveData>();
 
@@ -352,11 +263,16 @@ public class GridMapEditorWindow : EditorWindow
         {
             if (item.Value != null)
             {
+                if (item.Value.GetBrickState() == BrickState.StartBlock)
+                {
+                    levelDataSO.startPosition = item.Key;
+                }
                 brickSaveDatas.Add(new BrickSaveData
                 {
                     x = item.Key.x,
                     y = item.Key.y,
-                    IdBrick = item.Value.GetBrickId()
+                    IdBrick = item.Value.GetBrickId(),
+                    eulerRotate = item.Value.GetEulerRotation()
                 });
 
                 if (item.Value.GetBrickState() == BrickState.StartBlock)
@@ -365,8 +281,23 @@ public class GridMapEditorWindow : EditorWindow
                 }
             }
         }
+        levelDataSO.brickSaveDatas = brickSaveDatas;
         if (countStartPosition == 1)
         {
+            AssetDatabase.CreateAsset(levelDataSO, path);
+
+            //Call unity to save the change of old SO or save new SO
+            EditorUtility.SetDirty(levelDataSO);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            // Auto add level to database
+            if (levelDataBaseSO != null)
+            {
+                levelDataBaseSO.AddLevelData(levelDataSO);
+            }
+
+            EditorUtility.DisplayDialog("Notification", "Your Level was saved successful", "Ok", "Nuh uh");
 
         }
         else if (countStartPosition > 1)
@@ -385,6 +316,215 @@ public class GridMapEditorWindow : EditorWindow
 
     }
 
+    public void LoadCurrentLevel(LevelDataSO levelDataSO)
+    {
+        currentLevelId = levelDataSO.levelId;
+        currentMapName = levelDataSO.nameLevel;
+
+        gridSize = levelDataSO.mapSize;
+
+        placedBrickDict.Clear();
+        placedBrickDict = new Dictionary<Vector2Int, BrickBase>();
+
+        foreach(BrickSaveData brickSaveData in levelDataSO.brickSaveDatas)
+        {
+            placedBrickDict.Add(new Vector2Int(brickSaveData.x, brickSaveData.y), availableBrick[brickSaveData.IdBrick]);
+        }
+
+    }
+
+    public void LoadNewLevel()
+    {
+        currentLevelId = levelDataBaseSO.GetCountLevel();
+
+        currentMapName = "Level-"+(currentLevelId +1);
+
+        
+    }
+
+    #endregion
+    #region GUI
+    private void OnGUISavedMapMode()
+    {
+        GUILayout.Label("EDIT OLD MAP");
+
+        EditorGUI.BeginChangeCheck();
+
+        currentLevelId = EditorGUILayout.Popup("Choosing Level: ", currentLevelId, allLevelName.ToArray());
+
+        EditorGUILayout.Space(10);
+        if (EditorGUI.EndChangeCheck())
+        {
+                     
+            LoadCurrentLevel(levelDataBaseSO.GetLevel(currentLevelId));
+
+            EditorGUILayout.Space(10);
+        }
+        gridSize.x = EditorGUILayout.IntField("Size X:", gridSize.x);
+        gridSize.y = EditorGUILayout.IntField("Size Y:", gridSize.y);
+
+    }
+
+    private void OnGUINewMapMode()
+    {
+        GUILayout.Label("EDIT SIZE OF MAP (Square Size)");
+
+        gridSize.x = EditorGUILayout.IntField("Size X:", gridSize.x);
+        gridSize.y = EditorGUILayout.IntField("Size Y:", gridSize.y);
+
+        EditorGUILayout.Space(10);
+        if (GUILayout.Button("Create Map"))
+        {
+            //Draw map again
+            isMapCreated = true;
+            SceneView.RepaintAll();
+        }
+        GUILayout.Space(15);
+
+    }
+    //UI on inspector
+
+    private void OnGUI()
+    {
+
+        // Draw tool bar for choosing tool editor mode
+        EditorGUI.BeginChangeCheck();
+        currentMapMode = GUILayout.Toolbar(currentMapMode, new string[] { "New Map", "Saved Map" }, GUILayout.Height(30));
+
+        // if user click another tab then change mode
+        if (EditorGUI.EndChangeCheck())
+        {
+            // disable all focus
+            GUI.FocusControl(null);
+        }
+        if (currentMapMode == 0)
+        {
+            OnGUINewMapMode();
+        }
+        else
+        {
+            OnGUISavedMapMode();
+        }
+
+
+
+        // Draw tool bar for choosing tool editor mode
+        EditorGUI.BeginChangeCheck();
+        currentTabIndex = GUILayout.Toolbar(currentTabIndex, tabNames, GUILayout.Height(30));
+
+        // if user click another tab then change state
+        if (EditorGUI.EndChangeCheck())
+        {
+            // disable all focus
+            GUI.FocusControl(null);
+            ChangeState(allToolStates[currentTabIndex]);
+        }
+
+        GUILayout.Space(15);
+
+        //Draw UI for tool mode
+        if (currentToolState != null)
+        {
+            currentToolState.OnGUI();
+        }
+
+
+        EditorGUILayout.Space(15);
+        if (GUILayout.Button("Clear Map"))
+        {
+            if (EditorUtility.DisplayDialog("Warning", "Are you sure want to CLEAR map ?", "Ok", "Nah"))
+            {
+                ClearMap();
+            }
+
+        }
+
+        EditorGUILayout.Space(15);
+        if (GUILayout.Button("Save"))
+        {
+            if (EditorUtility.DisplayDialog("Confirm", "Are you sure want to save this map", "Ok", "No"))
+            {
+                SaveMap();
+            }
+        }
+
+    }
+
+    #endregion
+
+    private void CreateMap()
+    {
+        Handles.color = Color.skyBlue;
+        //Draw Grid map by draw x line horizontal and y line vertical
+
+        for (int row = 0; row <= gridSize.x; row++)
+        {
+            Handles.DrawLine(new Vector3(-row, 0.1f, 0f), new Vector3(-row, 0.1f, -gridSize.y));
+        }
+
+        for (int collumn = 0; collumn <= gridSize.y; collumn++)
+        {
+            Handles.DrawLine(new Vector3(0, 0.1f, -collumn), new Vector3(-gridSize.x, 0.1f, -collumn));
+        }
+    }
+
+    // Subcribe event to draw on Scene view
+    private void OnEnable()
+    {
+        SceneView.duringSceneGui += OnSceneGUI;
+
+        LoadBricksFromAsset();
+
+        LoadDatabase();
+
+        UpdatePreviewObject();
+        //Init all ToolState
+        allToolStates = new IToolEditorState[]
+        {
+            new SelectToolState(this),
+            new PaintToolState(this),
+            new EraseToolState(this)
+
+        };
+
+        //Init tab name for each tool state
+
+        tabNames = new string[allToolStates.Length];
+        for (int i = 0; i < tabNames.Length; i++)
+        {
+            tabNames[i] = allToolStates[i].GetTabName();
+        }
+
+        //Init first tool state
+        currentTabIndex = 0;
+        ChangeState(allToolStates[currentTabIndex]);
+    }
+
+
+    private void OnDisable()
+    {
+        SceneView.duringSceneGui -= OnSceneGUI;
+        if (previewBrick != null)
+        {
+            DestroyImmediate(previewBrick.gameObject);
+        }
+        
+    }
+    private void OnSceneGUI(SceneView sceneView)
+    {
+        //Draw map
+        if (isMapCreated)
+        {
+            CreateMap();
+        }
+
+        currentToolState.OnSceneGUI(sceneView);
+
+        sceneView.Repaint();
+
+
+    }
+
 
     private void ClearMap()
     {
@@ -392,7 +532,7 @@ public class GridMapEditorWindow : EditorWindow
         {
             if (brick != null)
             {
-                Undo.DestroyObjectImmediate(brick.gameObject);
+                DestroyImmediate(brick.gameObject);
             }
         }
         placedBrickDict.Clear();

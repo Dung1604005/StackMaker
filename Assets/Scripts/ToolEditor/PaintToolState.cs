@@ -95,9 +95,9 @@ public class PaintToolState : IToolEditorState
         // Check if this pos is empty ?
         if (window.PlacedBrickDict.ContainsKey(gridPos))
         {
-            if (window.PlacedBrickDict[gridPos] == null)
+            if (window.PlacedBrickDict[gridPos] == null ||window.PlacedBrickDict[gridPos].gameObject == null )
             {
-                window.PlacedBrickDict.Remove(gridPos);
+                window.RemoveBrick(gridPos);
             }
             else
             {
