@@ -801,7 +801,7 @@ MonoBehaviour:
     x: 24
     y: 18
     eulerRotate: {x: 0, y: 0, z: 0}
-  - IdBrick: 1
+  - IdBrick: 0
     x: 26
     y: 20
     eulerRotate: {x: 0, y: 0, z: 0}

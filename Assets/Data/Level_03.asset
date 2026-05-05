@@ -485,7 +485,7 @@ MonoBehaviour:
     x: 37
     y: 11
     eulerRotate: {x: 0, y: 0, z: 0}
-  - IdBrick: 0
+  - IdBrick: 1
     x: 37
     y: 12
     eulerRotate: {x: 0, y: 0, z: 0}
@@ -1041,11 +1041,11 @@ MonoBehaviour:
     x: 24
     y: 33
     eulerRotate: {x: 0, y: 0, z: 0}
-  - IdBrick: 0
+  - IdBrick: 1
     x: 23
     y: 33
     eulerRotate: {x: 0, y: 0, z: 0}
-  - IdBrick: 0
+  - IdBrick: 1
     x: 22
     y: 33
     eulerRotate: {x: 0, y: 0, z: 0}
@@ -1053,7 +1053,7 @@ MonoBehaviour:
     x: 21
     y: 33
     eulerRotate: {x: 0, y: 0, z: 0}
-  - IdBrick: 0
+  - IdBrick: 1
     x: 20
     y: 33
     eulerRotate: {x: 0, y: 0, z: 0}
@@ -1484,4 +1484,92 @@ MonoBehaviour:
   - IdBrick: 5
     x: 16
     y: 18
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 22
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 21
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 20
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 19
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 23
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 24
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 25
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 26
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 27
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 28
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 19
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 15
+    y: 29
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 20
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 21
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 22
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 23
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 24
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 25
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 26
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 27
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 28
+    eulerRotate: {x: 0, y: 0, z: 0}
+  - IdBrick: 0
+    x: 17
+    y: 29
     eulerRotate: {x: 0, y: 0, z: 0}

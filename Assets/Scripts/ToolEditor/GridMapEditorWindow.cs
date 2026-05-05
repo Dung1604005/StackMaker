@@ -516,13 +516,14 @@ public class GridMapEditorWindow : EditorWindow
     // Subcribe event to draw on Scene view
     private void OnEnable()
     {
+        CreateRoot();
         SceneView.duringSceneGui += OnSceneGUI;
 
         LoadBricksFromAsset();
 
         LoadDatabase();
 
-        CreateRoot();
+        
 
         UpdatePreviewObject();
         //Init all ToolState
