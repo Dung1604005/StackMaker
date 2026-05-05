@@ -35,12 +35,41 @@ public struct OnAddStack: IEvent
 
 public struct OnRemoveStack: IEvent
 {
-    public int IdBrick;
+    public Vector3 worldPositionStack;
 }
 
 public struct OnRemoveStackSucceed : IEvent
 {
-    public int IdBrick;
+    public Vector3 worldPositionStack;
+}
+
+public struct OnGameStart : IEvent
+{
+    
+
+}
+public struct OnPause : IEvent
+{
+    
+}
+public struct OnContinue: IEvent
+{
+    
+}
+
+public struct OnBackHome: IEvent
+{
+    
+}
+
+public struct OnRetry: IEvent
+{
+    
+}
+
+public struct OnChangeLevel: IEvent
+{
+    public int LevelId;
 }
 
 public struct OnWinEvent: IEvent

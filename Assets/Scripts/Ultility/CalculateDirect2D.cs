@@ -13,19 +13,19 @@ public class CalculateDirect2D
 
         if(Mathf.Abs(angle) <= 45f)
         {
-            return Direct.Forward;
+            return Direct.Right;
         }
         else if(Mathf.Abs(angle) >= 135f)
         {
-            return Direct.Back;
+            return Direct.Left;
         }
         else if(angle > 45f && angle < 135f)
         {
-            return Direct.Left;
+            return Direct.Forward;
         }
         else
         {
-            return Direct.Right;
+            return Direct.Back;
         }
     }
 

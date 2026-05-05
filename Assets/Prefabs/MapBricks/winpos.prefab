@@ -26775,7 +26775,7 @@ Transform:
   - {fileID: 6445877307188357865}
   - {fileID: 7957019213968058208}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4004061746781847761
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -12,6 +12,18 @@ public class Bridge: BrickBase
     {
         EventBus<OnRemoveStackSucceed>.UnSubcribe(FillStack);
     }
+
+    public override void OnDeSpawn()
+    {
+        base.OnDeSpawn();
+        foreach (Transform child in this.transform)
+        {
+            if (child.CompareTag(GameConfig.STACK_TAG))
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+    }
     public override void OnTriggerEnter(Collider collider)
     {
         if (interacted)
@@ -23,14 +35,14 @@ public class Bridge: BrickBase
             // If bridge collder with player then add stack and turn on the stack piece
             EventBus<OnRemoveStack>.Raise(new OnRemoveStack
             {
-                IdBrick = idBrick
+                worldPositionStack = GetWorldPosition()
             });
             
         }
     }
      public void FillStack(OnRemoveStackSucceed onRemoveStackSucceed)
     {
-        if(idBrick != onRemoveStackSucceed.IdBrick)
+        if(GetWorldPosition() != onRemoveStackSucceed.worldPositionStack)
         {
             return;
         }

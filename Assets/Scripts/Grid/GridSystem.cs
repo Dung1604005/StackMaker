@@ -6,20 +6,25 @@ using UnityEngine;
 using UnityEngine.Analytics;
 public class GridSystem : MonoBehaviour
 {
-    [Header("Reference")]
-
-    [SerializeField] private LevelDataSO levelData;
 
     [SerializeField] private BrickPrefabDataBase brickPrefabDataBase;
 
-    public LevelDataSO GetLevelData()
+    private List<BrickBase> listBrick = new List<BrickBase>();
+
+    public void OnEnable()
     {
-        return levelData;
+        EventBus<OnChangeLevel>.Subcribe(OnLoadLevel);
     }
+    public void OnDisable()
+    {
+        EventBus<OnChangeLevel>.UnSubcribe(OnLoadLevel);
+    }
+
+    
 
     public void OnInit()
     {
-        GenerateGrid(levelData);
+        
     }
     public void GenerateGrid(LevelDataSO levelDataSO)
     {
@@ -35,8 +40,25 @@ public class GridSystem : MonoBehaviour
                 BrickBase ob = PoolManager.Instance.Spawn<BrickBase>(brickBase, worldPos, Quaternion.Euler(rotateEuler));
                 ob.SetEulerRotation(rotateEuler);
                 ob.transform.SetParent(this.transform);
+
+                listBrick.Add(ob);
         }
         
+    }
+    public void ClearGrid()
+    {
+        foreach(BrickBase brick in listBrick)
+        {
+            PoolManager.Instance.DeSpawn<BrickBase>(brick);
+        }
+        listBrick.Clear();
+    }
+
+    public void OnLoadLevel(OnChangeLevel onChangeLevel)
+    {
+        LevelDataSO levelData = LevelManager.Instance.CurrentLevel;
+        ClearGrid();
+        GenerateGrid(levelData);
     }
     void Start()
     {

@@ -28,20 +28,28 @@ public class PlayerController : MonoBehaviour
     {
         EventBus<OnChangeDirect>.Subcribe(ChangeDirect);
         EventBus<OnWinEvent>.Subcribe(OnWin);
+        EventBus<OnPause>.Subcribe(OnPause);
+        EventBus<OnContinue>.Subcribe(OnContinue);
+        EventBus<OnChangeLevel>.Subcribe(OnChangeLevel);
     }
 
     public void OnDisable()
     {
         EventBus<OnChangeDirect>.UnSubcribe(ChangeDirect);
         EventBus<OnWinEvent>.UnSubcribe(OnWin);
+        EventBus<OnPause>.UnSubcribe(OnPause);
+        EventBus<OnContinue>.UnSubcribe(OnContinue);
+        EventBus<OnChangeLevel>.UnSubcribe(OnChangeLevel);
     }
 
     public void OnInit()
     {
-        LevelDataSO levelDataSO = gridSystem.GetLevelData();
+        LevelDataSO levelDataSO = LevelManager.Instance.CurrentLevel;
         this.transform.position = GridHelper.ConvertGridToWorldPosition(levelDataSO.startPosition.x, levelDataSO.startPosition.y, GameConfig.OriginPos) + offsetPositionFromGrid;
         isMoving = false;
         targetPosition = transform.position;
+        stackObjectController.OnInit();
+
     }
 
     #endregion
@@ -133,6 +141,21 @@ public class PlayerController : MonoBehaviour
     public void StopMove()
     {
         targetPosition = this.transform.position;
+    }
+
+    public void OnPause(OnPause onPause)
+    {
+        isMoving = false;
+    }
+
+    public void OnContinue(OnContinue onContinue)
+    {
+        isMoving = true;
+    }
+
+    public void OnChangeLevel(OnChangeLevel onChangeLevel)
+    {
+        OnInit();
     }
 
     public void OnWin(OnWinEvent onWinEvent)

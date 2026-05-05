@@ -24,8 +24,12 @@ public class CornerBrick : BrickBase
 
         int normalizeAngle = ((currentAngle % n ) + n )%n;
 
-        Debug.Log(normalizeAngle);
-        if(normalizeAngle == 0)
+        SetEulerRotation(transform.eulerAngles);
+        ChangeStateCorner(normalizeAngle);
+    }
+    public void ChangeStateCorner(int normalizeAngle)
+    {
+         if(normalizeAngle == 0)
         {
             brickState = BrickState.RightTopCorner;
         }
@@ -45,6 +49,17 @@ public class CornerBrick : BrickBase
         {
             Debug.Log("Angle is not valid");
         }
+    }
+    public override void SetEulerRotation(Vector3 eulerRotation)
+    {
+        base.SetEulerRotation(eulerRotation);
+        int n = 360;
+        
+        int currentAngle =Mathf.RoundToInt(transform.eulerAngles.y);
+
+        int normalizeAngle = ((currentAngle % n ) + n )%n;
+
+        ChangeStateCorner(normalizeAngle);
     }
     public override void OnTriggerEnter(Collider collider)
     {

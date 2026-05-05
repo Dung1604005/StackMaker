@@ -19,7 +19,7 @@ public class StackObjectController : MonoBehaviour
 
     [SerializeField] private Transform parent;
 
-    [SerializeField]private Stack<StackObject> currentStackObjects;
+    [SerializeField] private Stack<StackObject> currentStackObjects = new Stack<StackObject>();
 
     private ObjectPool<StackObject> objectPool;
 
@@ -37,15 +37,15 @@ public class StackObjectController : MonoBehaviour
     }
     void Start()
     {
-        OnInit();
         
+        objectPool = new ObjectPool<StackObject>(prefab, minSize, maxSize, parent);
+        objectPool.PreWarm();
     }
 
     public void OnInit()
     {
-        objectPool = new ObjectPool<StackObject>(prefab, minSize, maxSize, parent);
-        currentStackObjects = new Stack<StackObject>();
-        objectPool.PreWarm();
+        
+        ClearAllStack();
     }
 
     public int CountStackObject()
@@ -55,21 +55,34 @@ public class StackObjectController : MonoBehaviour
 
     public void AddStackObject(OnAddStack onAddStack)
     {
-       
+
+
         StackObject stackObject = objectPool.Get();
-        
+
         stackObject.transform.SetParent(this.transform);
-        stackObject.transform.localPosition = new Vector3(0, ((currentStackObjects.Count-2)*offsetY), 0);
+        stackObject.transform.localPosition = new Vector3(0, ((currentStackObjects.Count - 2) * offsetY), 0);
         currentStackObjects.Push(stackObject);
         playerController.Jump(currentStackObjects.Count);
-        
-        
+
+
+
     }
 
-    
+    public void ClearAllStack()
+    {
+        for (int time = 0; time < 100 && currentStackObjects.Count > 0; time++)
+        {
+            
+            StackObject stackObject = currentStackObjects.Pop();
+
+            objectPool.ReturnToPool(stackObject);
+        }
+    }
+
+
     public void RemoveStackObject(OnRemoveStack onRemoveStack)
     {
-        if(currentStackObjects.Count == 0)
+        if (currentStackObjects.Count == 0)
         {
             playerController.StopMove();
             //Handle logic when player lose
@@ -82,12 +95,12 @@ public class StackObjectController : MonoBehaviour
 
         EventBus<OnRemoveStackSucceed>.Raise(new OnRemoveStackSucceed
         {
-            IdBrick = onRemoveStack.IdBrick
+            worldPositionStack = onRemoveStack.worldPositionStack
         });
     }
-    
 
 
 
-    
+
+
 }

@@ -9,7 +9,7 @@ public class Brick : BrickBase
         {
             return;
         }
-        if (collider.CompareTag(GameConfig.PLAYER_TAG))
+        if (collider.CompareTag(GameConfig.PLAYER_TAG) && GetBrickState() != BrickState.Blocked )
         {
             // If brick collder with player then add stack and turn off the stack piece
             EventBus<OnAddStack>.Raise(new OnAddStack

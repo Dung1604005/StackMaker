@@ -116,19 +116,6 @@ public class PaintToolState : IToolEditorState
 
         }
 
-
-        // Create a root container all brick
-        if (window.Root == null)
-        {
-            GameObject gridRoot = GameObject.Find("Root");
-
-            if (gridRoot == null)
-            {
-                gridRoot = new GameObject("Root");
-            }
-            window.SetRoot(gridRoot.transform);
-        }
-
         //Create brick
 
         BrickBase brickObject = (BrickBase)PrefabUtility.InstantiatePrefab(selectedBrick);

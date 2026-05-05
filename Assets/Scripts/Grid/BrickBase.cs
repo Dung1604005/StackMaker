@@ -15,11 +15,9 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
     public virtual void OnInit()
     {
         interacted = false;
-        idBrick = this.gameObject.GetInstanceID();
-
     }
 
-    public void OnDeSpawn()
+    public virtual void OnDeSpawn()
     {
         foreach (Transform child in this.transform)
         {
@@ -28,8 +26,6 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
         
         }
         interacted = false;
-        brickState = BrickState.Null;
-        this.transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
     public void SetInfo(BrickState _blockState, Vector3 EulerRotate)
@@ -60,6 +56,7 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
     {
         this.eulerRotation += eulerRotate;
          this.transform.Rotate(eulerRotate);
+         Debug.Log(transform.eulerAngles);
     }
 
     public Vector3 GetEulerRotation()
@@ -67,7 +64,7 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
         return eulerRotation;
     }
 
-    public void SetEulerRotation(Vector3 eulerRotation)
+    public virtual void SetEulerRotation(Vector3 eulerRotation)
     {
         this.eulerRotation = eulerRotation;
         this.transform.eulerAngles = eulerRotation;

@@ -138,83 +138,6 @@ public class GridMapEditorWindow : EditorWindow
 
     #region SAVE AND LOAD
 
-    public void LoadBricksFromAsset()
-
-
-    {
-        string[] guids = AssetDatabase.FindAssets("t:BrickPrefabDataBase");
-
-        if (guids.Length > 0)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-
-            brickPrefabDataBase = AssetDatabase.LoadAssetAtPath<BrickPrefabDataBase>(path);
-
-            if (brickPrefabDataBase != null)
-            {
-                brickNames = brickPrefabDataBase.GetAllNamePrefab().ToArray();
-            }
-        }
-    }
-    // Handle the preview visual for brick before place
-    public void UpdatePreviewObject()
-    {
-        if (previewBrick != null)
-        {
-            DestroyImmediate(previewBrick.gameObject);
-        }
-
-        if (brickPrefabDataBase != null && brickPrefabDataBase.Count() == 0) return;
-
-        // create prefab
-        BrickBase selectedPrefab = brickPrefabDataBase.GetBrickPrefab(selectedBrickIndex);
-        previewBrick = Instantiate(selectedPrefab);
-
-        //Make previewBrick invisible from Hierarchy and dont be saved in file 
-
-        previewBrick.gameObject.hideFlags = HideFlags.HideAndDontSave;
-
-        //Turn off all collider of gameobject and its child
-        Collider collider = previewBrick.GetComponent<Collider>();
-        if (collider != null)
-        {
-            collider.enabled = false;
-        }
-
-        Collider[] colliders = previewBrick.GetComponentsInChildren<Collider>();
-        foreach (var col in colliders) col.enabled = false;
-
-
-    }
-
-    public void DrawHighLightCell(float x, float z, Color color)
-    {
-        Handles.color = color;
-        Vector3 p1 = new Vector3(x, 0.2f, z);
-        Vector3 p2 = new Vector3(x - 1, 0.2f, z);
-        Vector3 p3 = new Vector3(x - 1, 0.2f, z - 1);
-        Vector3 p4 = new Vector3(x, 0.2f, z - 1);
-        Handles.DrawLines(new Vector3[] { p1, p2, p2, p3, p3, p4, p4, p1 });
-    }
-
-    public void LoadDatabase()
-    {
-        string[] guids = AssetDatabase.FindAssets("t:LevelDataBaseSO");
-
-        if (guids.Length > 0)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-
-            levelDataBaseSO = AssetDatabase.LoadAssetAtPath<LevelDataBaseSO>(path);
-
-            if (levelDataBaseSO != null)
-            {
-                allLevelName = levelDataBaseSO.GetAllNameLevel();
-            }
-        }
-
-
-    }
 
     public void SaveMap()
     {
@@ -234,6 +157,8 @@ public class GridMapEditorWindow : EditorWindow
         {
             // Create a SO
             levelDataSO = ScriptableObject.CreateInstance<LevelDataSO>();
+
+            AssetDatabase.CreateAsset(levelDataSO, path);
         }
 
         if (currentMapMode == 0)
@@ -277,7 +202,7 @@ public class GridMapEditorWindow : EditorWindow
         levelDataSO.brickSaveDatas = brickSaveDatas;
         if (countStartPosition == 1)
         {
-            AssetDatabase.CreateAsset(levelDataSO, path);
+            
 
             //Call unity to save the change of old SO or save new SO
             EditorUtility.SetDirty(levelDataSO);
@@ -285,7 +210,7 @@ public class GridMapEditorWindow : EditorWindow
             AssetDatabase.Refresh();
 
             // Auto add level to database
-            if (levelDataBaseSO != null)
+            if (levelDataBaseSO != null && currentMapMode == 0)
             {
                 levelDataBaseSO.AddLevelData(levelDataSO);
             }
@@ -311,6 +236,7 @@ public class GridMapEditorWindow : EditorWindow
 
     public void LoadCurrentLevel(LevelDataSO levelDataSO)
     {
+        ClearMap();
         currentLevelId = levelDataSO.levelId;
         currentMapName = levelDataSO.nameLevel;
 
@@ -322,8 +248,10 @@ public class GridMapEditorWindow : EditorWindow
         foreach (BrickSaveData brickSaveData in levelDataSO.brickSaveDatas)
         {
             BrickBase brick = brickPrefabDataBase.GetBrickPrefab(brickSaveData.IdBrick);
-            brick.SetEulerRotation(brickSaveData.eulerRotate);
-            placedBrickDict.Add(new Vector2Int(brickSaveData.x, brickSaveData.y), brick);
+
+            BrickBase brickObject = (BrickBase)PrefabUtility.InstantiatePrefab(brick);
+            brickObject.SetEulerRotation(brickSaveData.eulerRotate);
+            placedBrickDict.Add(new Vector2Int(brickSaveData.x, brickSaveData.y), brickObject);
         }
 
         LoadMap();
@@ -338,9 +266,46 @@ public class GridMapEditorWindow : EditorWindow
 
 
     }
+    public void LoadDatabase()
+    {
+        string[] guids = AssetDatabase.FindAssets("t:LevelDataBaseSO");
+
+        if (guids.Length > 0)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+
+            levelDataBaseSO = AssetDatabase.LoadAssetAtPath<LevelDataBaseSO>(path);
+
+            if (levelDataBaseSO != null)
+            {
+                allLevelName = levelDataBaseSO.GetAllNameLevel();
+            }
+        }
+
+
+    }
+    public void LoadBricksFromAsset()
+
+
+    {
+        string[] guids = AssetDatabase.FindAssets("t:BrickPrefabDataBase");
+
+        if (guids.Length > 0)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+
+            brickPrefabDataBase = AssetDatabase.LoadAssetAtPath<BrickPrefabDataBase>(path);
+
+            if (brickPrefabDataBase != null)
+            {
+                brickNames = brickPrefabDataBase.GetAllNamePrefab().ToArray();
+            }
+        }
+    }
 
     public void LoadMap()
     {
+        
         foreach (var brickData in placedBrickDict)
         {
             Vector2Int gridPos = brickData.Key;
@@ -353,11 +318,9 @@ public class GridMapEditorWindow : EditorWindow
             int indexPrefab = brickData.Value.GetBrickId();
             Vector3 rotateEuler =brickData.Value.GetEulerRotation();
 
-            BrickBase brickBase = brickPrefabDataBase.GetBrickPrefab(indexPrefab);
-
-            BrickBase ob = PoolManager.Instance.Spawn<BrickBase>(brickBase, worldPos, Quaternion.Euler(rotateEuler));
-            ob.SetEulerRotation(rotateEuler);
-            ob.transform.SetParent(root.transform);
+            brickData.Value.transform.position = worldPos;
+            brickData.Value.SetEulerRotation(rotateEuler);
+            brickData.Value.transform.SetParent(root.transform);
         }
     }
 
@@ -388,6 +351,9 @@ public class GridMapEditorWindow : EditorWindow
         }
         gridSize.x = EditorGUILayout.IntField("Size X:", gridSize.x);
         gridSize.y = EditorGUILayout.IntField("Size Y:", gridSize.y);
+
+        isMapCreated = true;
+        SceneView.RepaintAll();
 
     }
 
@@ -475,6 +441,46 @@ public class GridMapEditorWindow : EditorWindow
         }
 
     }
+    // Handle the preview visual for brick before place
+    public void UpdatePreviewObject()
+    {
+        if (previewBrick != null)
+        {
+            DestroyImmediate(previewBrick.gameObject);
+        }
+
+        if (brickPrefabDataBase != null && brickPrefabDataBase.Count() == 0) return;
+
+        // create prefab
+        BrickBase selectedPrefab = brickPrefabDataBase.GetBrickPrefab(selectedBrickIndex);
+        previewBrick = Instantiate(selectedPrefab);
+
+        //Make previewBrick invisible from Hierarchy and dont be saved in file 
+
+        previewBrick.gameObject.hideFlags = HideFlags.HideAndDontSave;
+
+        //Turn off all collider of gameobject and its child
+        Collider collider = previewBrick.GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        Collider[] colliders = previewBrick.GetComponentsInChildren<Collider>();
+        foreach (var col in colliders) col.enabled = false;
+
+
+    }
+
+    public void DrawHighLightCell(float x, float z, Color color)
+    {
+        Handles.color = color;
+        Vector3 p1 = new Vector3(x, 0.2f, z);
+        Vector3 p2 = new Vector3(x - 1, 0.2f, z);
+        Vector3 p3 = new Vector3(x - 1, 0.2f, z - 1);
+        Vector3 p4 = new Vector3(x, 0.2f, z - 1);
+        Handles.DrawLines(new Vector3[] { p1, p2, p2, p3, p3, p4, p4, p1 });
+    }
 
     #endregion
 
@@ -494,6 +500,20 @@ public class GridMapEditorWindow : EditorWindow
         }
     }
 
+    public void CreateRoot()
+    {
+        if (root == null)
+        {
+            GameObject gridRoot = GameObject.Find("Root");
+
+            if (gridRoot == null)
+            {
+                gridRoot = new GameObject("Root");
+            }
+            SetRoot(gridRoot.transform);
+        }
+    }
+    #region Init
     // Subcribe event to draw on Scene view
     private void OnEnable()
     {
@@ -502,6 +522,8 @@ public class GridMapEditorWindow : EditorWindow
         LoadBricksFromAsset();
 
         LoadDatabase();
+
+        CreateRoot();
 
         UpdatePreviewObject();
         //Init all ToolState
@@ -536,6 +558,7 @@ public class GridMapEditorWindow : EditorWindow
         }
 
     }
+    #endregion
     private void OnSceneGUI(SceneView sceneView)
     {
         //Draw map

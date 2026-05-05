@@ -71,7 +71,8 @@ public class PoolManager : MonoBehaviour
     {
         if (dictPool.ContainsKey(ob.gameObject.tag))
         {
-            ObjectPool<T> pool = (ObjectPool<T>)dictPool[name];
+            
+            ObjectPool<T> pool = (ObjectPool<T>)dictPool[ob.gameObject.tag];
 
             pool.ReturnToPool(ob);
         }
