@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class InputReader : MonoBehaviour
@@ -10,50 +11,27 @@ public class InputReader : MonoBehaviour
 
     public void OnEnable()
     {
-        EventBus<OnWinEvent>.Subcribe(OnWin);
-        EventBus<OnPause>.Subcribe(OnPause);
-        EventBus<OnContinue>.Subcribe(OnContinue);
-        EventBus<OnGameStart>.Subcribe(OnGameStart);
-        EventBus<OnBackHome>.Subcribe(OnBackHome);
-        EventBus<OnChangeLevel>.Subcribe(OnChangeLevel);
+        EventBus<OnCanInteract>.Subcribe(OnSetInteract);
+        
     }
     public void OnDisable()
     {
-        EventBus<OnWinEvent>.UnSubcribe(OnWin);
-        EventBus<OnGameStart>.UnSubcribe(OnGameStart);
-        EventBus<OnPause>.UnSubcribe(OnPause);
-        EventBus<OnContinue>.UnSubcribe(OnContinue);
-        EventBus<OnBackHome>.UnSubcribe(OnBackHome);
-        EventBus<OnChangeLevel>.UnSubcribe(OnChangeLevel);
+        EventBus<OnCanInteract>.UnSubcribe(OnSetInteract);
     }
 
-    public void OnGameStart(OnGameStart onGameStart)
+    public void OnSetInteract(OnCanInteract onCanInteract)
     {
-        canDetect = true;
+        if(canDetect == true)
+        {
+            StartCoroutine(DelayEnableDetection());
+        }
+        else
+        {
+            canDetect = onCanInteract.canInteract;
+        }
+        
     }
-
-    public void OnPause(OnPause onPause)
-    {
-        canDetect = false;
-    }
-    public void OnContinue(OnContinue onContinue)
-    {
-        canDetect = true;
-    }
-    public void OnBackHome(OnBackHome onBackHome)
-    {
-        canDetect = false;
-    }
-
-    public void OnChangeLevel(OnChangeLevel onChangeLevel)
-    {
-        canDetect = true;
-    }
-    public void OnWin(OnWinEvent onWinEvent)
-    {
-        // block input when win
-        canDetect = false;
-    }
+    
     void Awake()
     {
         canDetect = false;
@@ -73,17 +51,26 @@ public class InputReader : MonoBehaviour
             endPos = Input.mousePosition;
 
             //Player have to swipe
-            if((endPos - startPos).sqrMagnitude <= 3)
+            if((endPos - startPos).sqrMagnitude <= 36)
             {
                 return;
             }
+            
             Direct swipeDirect = CalculateDirect2D.CalculateDirect(startPos, endPos);
+            Debug.Log(swipeDirect);
             EventBus<OnChangeDirect>.Raise(new OnChangeDirect
             {
                 direct = swipeDirect,
             });
 
         }
+    }
+    private IEnumerator DelayEnableDetection()
+    {
+        
+        yield return new WaitForEndOfFrame(); 
+        
+        canDetect = true;
     }
 
 

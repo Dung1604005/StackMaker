@@ -59,6 +59,8 @@ public class GridSystem : MonoBehaviour
         LevelDataSO levelData = LevelManager.Instance.CurrentLevel;
         ClearGrid();
         GenerateGrid(levelData);
+
+        EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = true});
     }
     void Start()
     {

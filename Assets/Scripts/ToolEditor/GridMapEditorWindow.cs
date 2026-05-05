@@ -36,7 +36,6 @@ public class GridMapEditorWindow : EditorWindow
 
     // Data for brick
 
-    private string brickFolderPath = "Assets/Prefabs/MapBricks";
     private BrickPrefabDataBase brickPrefabDataBase;
 
     private string[] brickNames;

@@ -10,23 +10,6 @@ public struct OnChangeDirect: IEvent
 {
     public Direct direct;
 }
-public struct OnMoveOnBridge: IEvent
-{
-    public Direct direct;
-
-    public Vector3 target;
-
-}
-public struct OnChangeTargetPositionPlayer: IEvent
-{
-    public Vector3 TargetPosition;
-
-    public Vector2Int GridPosition;
-
-    public BrickState TargetBlockState;
-
-
-}
 
 public struct OnAddStack: IEvent
 {
@@ -62,16 +45,14 @@ public struct OnBackHome: IEvent
     
 }
 
-public struct OnRetry: IEvent
-{
-    
-}
-
 public struct OnChangeLevel: IEvent
 {
     public int LevelId;
 }
-
+public struct OnCanInteract : IEvent
+{
+    public bool canInteract;
+}
 public struct OnWinEvent: IEvent
 {
     

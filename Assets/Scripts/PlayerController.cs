@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Transform playerVisualTransform;
 
+    [SerializeField] private Animator anim;
+
     [Header("Context")]
 
     [SerializeField] private Vector3 offsetPositionFromGrid;
@@ -49,6 +51,8 @@ public class PlayerController : MonoBehaviour
         isMoving = false;
         targetPosition = transform.position;
         stackObjectController.OnInit();
+        anim.SetInteger("renwu", 0);
+
 
     }
 
@@ -140,7 +144,7 @@ public class PlayerController : MonoBehaviour
 
     public void StopMove()
     {
-        targetPosition = this.transform.position;
+        isMoving = false;
     }
 
     public void OnPause(OnPause onPause)
@@ -161,12 +165,15 @@ public class PlayerController : MonoBehaviour
     public void OnWin(OnWinEvent onWinEvent)
     {
         StopMove();
+        anim.SetInteger("renwu", 2);
     }
 
 
     public void Jump(int stackAmount)
     {
+        anim.SetTrigger("jump");
         playerVisualTransform.localPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
+        
     }
     public void Fall(int stackAmount)
     {

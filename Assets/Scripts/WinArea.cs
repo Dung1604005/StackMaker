@@ -27,12 +27,12 @@ public class WinArea : BrickBase
 
         chessOpen.SetActive(true);
 
-        int currentLvId = LevelManager.Instance.CurrentLevel.levelId;
         EventBus<OnWinEvent>.Raise(new OnWinEvent
         {
             
         });
-        LevelManager.Instance.ChangeLevel(currentLvId + 1);
+
+        EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = false});
     }
 
     public override void OnTriggerEnter(Collider other)

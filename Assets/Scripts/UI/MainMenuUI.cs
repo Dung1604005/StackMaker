@@ -10,8 +10,8 @@ public class MainMenuUI : MonoBehaviour, IUIPanel
     public void StartGame()
     {
         SetActive(false);
-        LevelManager.Instance.ChangeLevel(LevelManager.Instance.CurrentLevel.levelId);
         EventBus<OnGameStart>.Raise(new OnGameStart{});
+        EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = true});
     }
 
     public void OpenSetting()
