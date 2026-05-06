@@ -14,8 +14,6 @@ public class LevelManager : MonoBehaviour
 
     public LevelDataSO CurrentLevel => currentLevel;
 
-    public LevelDataBaseSO LevelDataBase => levelDataBase;
-
     public int CollectedStack => collectedStack;
 
     public void OnEnable()

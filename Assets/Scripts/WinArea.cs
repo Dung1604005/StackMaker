@@ -13,8 +13,6 @@ public class WinArea : BrickBase
     public override void OnInit()
     {
         base.OnInit();
-        win1Particle.Pause();
-        win2Particle.Pause();
         chessClose.SetActive(true);
         chessOpen.SetActive(false);
     }

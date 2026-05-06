@@ -28,16 +28,6 @@ public abstract class BrickBase : MonoBehaviour, IBrick, IPoolable
         interacted = false;
     }
 
-    public void SetInfo(BrickState _blockState, Vector3 EulerRotate)
-    {
-
-        brickState = _blockState;
-
-        this.transform.Rotate(EulerRotate);
-
-        eulerRotation = EulerRotate;
-        
-    }
     public Vector3 GetWorldPosition()
     {
         return transform.position;

@@ -57,7 +57,7 @@ public class InputReader : MonoBehaviour
             }
             
             Direct swipeDirect = CalculateDirect2D.CalculateDirect(startPos, endPos);
-            Debug.Log(swipeDirect);
+            
             EventBus<OnChangeDirect>.Raise(new OnChangeDirect
             {
                 direct = swipeDirect,

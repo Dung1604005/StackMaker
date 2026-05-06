@@ -4,8 +4,6 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Reference")]
 
-    [SerializeField] private GridSystem gridSystem;
-
     [SerializeField] private StackObjectController stackObjectController;
 
     [SerializeField] private Transform playerVisualTransform;
@@ -23,7 +21,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isMoving = false;
 
     [SerializeField] private Vector3 targetPosition;
-    public bool IsMoving => isMoving;
 
     #region Init
     public void OnEnable()
