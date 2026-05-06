@@ -60,7 +60,7 @@ public class GridSystem : MonoBehaviour
         ClearGrid();
         GenerateGrid(levelData);
 
-        EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = true});
+        
     }
     void Start()
     {

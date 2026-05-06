@@ -21,13 +21,14 @@ public class InputReader : MonoBehaviour
 
     public void OnSetInteract(OnCanInteract onCanInteract)
     {
-        if(canDetect == true)
+        Debug.Log(onCanInteract.canInteract);
+        if(onCanInteract.canInteract == true)
         {
             StartCoroutine(DelayEnableDetection());
         }
         else
         {
-            canDetect = onCanInteract.canInteract;
+            canDetect = false;
         }
         
     }
