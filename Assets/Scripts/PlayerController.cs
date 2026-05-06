@@ -174,6 +174,7 @@ public class PlayerController : MonoBehaviour
     }
     public void Fall(int stackAmount)
     {
+       
         playerVisualTransform.localPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
     }
     
