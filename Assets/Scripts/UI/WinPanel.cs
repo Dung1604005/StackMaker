@@ -13,8 +13,7 @@ public class WinPanel: MonoBehaviour, IUIPanel
     public void NextLevel()
     {
         SetActive(false);
-        LevelManager.Instance.ChangeLevel(LevelManager.Instance.CurrentLevel.levelId + 1);
-
+        UIManagement.Instance.PlayLevelTransition();
     }
 
     public void SetScore(int score)
