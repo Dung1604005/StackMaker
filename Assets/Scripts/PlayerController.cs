@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Vector3 targetPosition;
 
+    public StackObjectController StackObjectController => stackObjectController;
+
     #region Init
     public void OnEnable()
     {

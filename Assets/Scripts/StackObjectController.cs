@@ -28,12 +28,12 @@ public class StackObjectController : MonoBehaviour
     public void OnEnable()
     {
         EventBus<OnAddStack>.Subcribe(AddStackObject);
-        EventBus<OnRemoveStack>.Subcribe(RemoveStackObject);
+        
     }
     public void OnDisable()
     {
         EventBus<OnAddStack>.UnSubcribe(AddStackObject);
-        EventBus<OnRemoveStack>.UnSubcribe(RemoveStackObject);
+        
     }
     void Start()
     {
@@ -80,23 +80,21 @@ public class StackObjectController : MonoBehaviour
     }
 
 
-    public void RemoveStackObject(OnRemoveStack onRemoveStack)
+    public bool RemoveStackObject()
     {
         if (currentStackObjects.Count == 0)
         {
             playerController.StopMove();
             //Handle logic when player lose
-            return;
+            return false;
         }
         StackObject stackObject = currentStackObjects.Pop();
 
         objectPool.ReturnToPool(stackObject);
         playerController.Fall(currentStackObjects.Count);
 
-        EventBus<OnRemoveStackSucceed>.Raise(new OnRemoveStackSucceed
-        {
-            worldPositionStack = onRemoveStack.worldPositionStack
-        });
+        return true;
+
     }
 
 

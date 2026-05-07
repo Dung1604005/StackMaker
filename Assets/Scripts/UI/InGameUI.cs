@@ -18,7 +18,7 @@ public class InGameUI: MonoBehaviour
     }
     public void SetLevel(OnChangeLevel onChangeLevel)
     {
-        levelText.text = "Level " + onChangeLevel.LevelId.ToString();
+        levelText.text = "Level " + (onChangeLevel.LevelId + 1).ToString();
 
 
     }

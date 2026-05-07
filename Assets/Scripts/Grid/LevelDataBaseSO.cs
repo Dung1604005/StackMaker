@@ -8,12 +8,12 @@ public class LevelDataBaseSO : ScriptableObject
 
     public LevelDataSO GetLevel(int index)
     {
-        if(index >= 0 && index < levelDataBase.Count)
+        if(levelDataBase.Count == 0)
         {
-            return levelDataBase[index];
+            return null;
         }
-
-        return null;
+        return levelDataBase[index % levelDataBase.Count];
+        
     }
 
     public List<string> GetAllNameLevel()
