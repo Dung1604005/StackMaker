@@ -44,8 +44,26 @@ public class CalculateDirect2D
                 
             default:
                 return new Vector2Int(0, -1);
-                
+            
+        }
+    }
 
+    public static Vector3 ChangeDirectToEulerQuaternion(Direct direct)
+    {
+        switch (direct)
+        {
+            case Direct.Back:
+                return new Vector3(0, 270f,0);
+                
+            case Direct.Forward:
+                return  new Vector3(0, 90, 0);
+                
+            case Direct.Left:
+                return  new Vector3(0, 360f,  0);
+                
+            default:
+                return new Vector3(0, 180, 0);
+            
         }
     }
 

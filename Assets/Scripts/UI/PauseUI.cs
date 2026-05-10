@@ -24,7 +24,7 @@ public class PauseUI: MonoBehaviour, IUIPanel
     public void Retry()
     {
         SetActive(false);
-        LevelManager.Instance.ChangeLevel(LevelManager.Instance.CurrentLevel.levelId);
+        LevelManager.Instance.ChangeLevel(LevelManager.Instance.CurrentLevelNumber);
         EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = true});
         
         

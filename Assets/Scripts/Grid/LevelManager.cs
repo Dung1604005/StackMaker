@@ -8,11 +8,15 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private LevelDataBaseSO levelDataBase;
 
-    [SerializeField] private LevelDataSO currentLevel;
+    [SerializeField] private LevelDataSO currentLevelData;
+
+    [SerializeField] private int currentLevelNumber; //This is not the same with id of Data, this can over the max data of level
 
     [SerializeField] private int collectedStack;
 
-    public LevelDataSO CurrentLevel => currentLevel;
+    public LevelDataSO CurrentLevelData => currentLevelData;
+
+    public int CurrentLevelNumber => currentLevelNumber;
 
     public int CollectedStack => collectedStack;
 
@@ -31,13 +35,12 @@ public class LevelManager : MonoBehaviour
     {
         if (levelDataBase.GetLevel(levelId) != null)
         {
-            currentLevel = levelDataBase.GetLevel(levelId);
+            currentLevelData = levelDataBase.GetLevel(levelId);
+            currentLevelNumber = levelId;
             collectedStack = 0;
             PlayerPrefs.SetInt("currentLevel", levelId);
             EventBus<OnChangeLevel>.Raise(new OnChangeLevel { LevelId = levelId });
             EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = true});
-
-            
         }
         else
         {
@@ -59,7 +62,7 @@ public class LevelManager : MonoBehaviour
     public void OnInit()
     {
         collectedStack = 0;
-        ChangeLevel(currentLevel.levelId);       
+        ChangeLevel(currentLevelData.levelId);       
     }
     public void LoadSaveData()
     {

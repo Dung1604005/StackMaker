@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -45,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnInit()
     {
-        LevelDataSO levelDataSO = LevelManager.Instance.CurrentLevel;
+        LevelDataSO levelDataSO = LevelManager.Instance.CurrentLevelData;
         this.transform.position = GridHelper.ConvertGridToWorldPosition(levelDataSO.startPosition.x, levelDataSO.startPosition.y, GameConfig.OriginPos) + offsetPositionFromGrid;
         isMoving = false;
         targetPosition = transform.position;
@@ -68,18 +70,32 @@ public class PlayerController : MonoBehaviour
         //When player change direct, detech the furthest block can reach
 
         direct = onChangeDirect.direct;
+        StartCoroutine(IERotate(direct));
         Vector3 directionVector = new Vector3(CalculateDirect2D.ChangeDirectToVector2Int(direct).x, 0f, CalculateDirect2D.ChangeDirectToVector2Int(direct).y);
         RaycastHit hit;
         // Detech the nearest wall
         if (Physics.Raycast(transform.position, directionVector, out hit, GameConfig.MAX_DISTANCE_RAYCAST, GameConfig.LAYER_WALL))
         {
-            if (hit.collider.TryGetComponent<BrickBase>(out BrickBase brick))
+            Collider hitCollider = hit.collider;
+            BrickBase brick = ColliderCache<BrickBase>.GetComponent(hitCollider);
+
+            if (brick == null)
+            {
+                ColliderCache<BrickBase>.AddComponent(hitCollider, hitCollider.GetComponent<BrickBase>());
+                brick = ColliderCache<BrickBase>.GetComponent(hitCollider);
+
+            }
+
+            if (brick != null)
             {
                 // Back 1 cell from the wall to get the last cell player can reach
                 Vector3 directBack = new Vector3(directionVector.x * GameConfig.CellSize.x, directionVector.y * GameConfig.CellSize.y,
                 directionVector.z * GameConfig.CellSize.z);
                 targetPosition = brick.GetWorldPosition() - directBack + offsetPositionFromGrid;
-
+            }
+            else
+            {
+                Debug.LogError("Brick dont have brickBase component");
             }
 
         }
@@ -113,7 +129,16 @@ public class PlayerController : MonoBehaviour
                 // Automatic change direct if find special corner
                 if (Physics.Raycast(transform.position, new Vector3(0, -1, 0), out RaycastHit hit, 20f, GameConfig.LAYER_BRICK))
                 {
-                    if (hit.collider.TryGetComponent<BrickBase>(out BrickBase brick))
+                    Collider hitCollider = hit.collider;
+                    BrickBase brick = ColliderCache<BrickBase>.GetComponent(hitCollider);
+
+                    if (brick == null)
+                    {
+                        brick = hitCollider.GetComponent<BrickBase>();
+                        ColliderCache<BrickBase>.AddComponent(hitCollider, brick);
+
+                    }
+                    if (brick != null)
                     {
                         Direct nxtDirect = CalculateDirect2D.ChangeCornerToDirect(brick.GetBrickState(), direct);
                         if (nxtDirect == Direct.NULL)
@@ -124,12 +149,18 @@ public class PlayerController : MonoBehaviour
                         }
                         else
                         {
+
+                            StartCoroutine(IERotate(nxtDirect));
                             // Automatic change direct if find special corner
                             ChangeDirect(new OnChangeDirect
                             {
                                 direct = nxtDirect
                             });
                         }
+                    }
+                    else
+                    {
+                        Debug.LogError("Brick dont have brickBase component");
                     }
                 }
 
@@ -167,19 +198,36 @@ public class PlayerController : MonoBehaviour
         anim.SetInteger("renwu", 2);
     }
 
+    IEnumerator IERotate(Direct direct)
+    {
+        Vector3 targetRotation = CalculateDirect2D.ChangeDirectToEulerQuaternion(direct);
+
+        targetRotation = new Vector3(playerVisualTransform.eulerAngles.x, targetRotation.y, playerVisualTransform.eulerAngles.z);
+
+        
+        for(int i = 0; i < 100 && (targetRotation - playerVisualTransform.eulerAngles).sqrMagnitude > 0.1f; i++)
+        {
+            playerVisualTransform.eulerAngles = Vector3.Lerp(playerVisualTransform.eulerAngles, targetRotation, 0.5f);
+
+            Debug.Log(playerVisualTransform.eulerAngles);
+            yield return null;
+        }
+
+    }
+
 
     public void Jump(int stackAmount)
     {
         anim.SetTrigger("jump");
         playerVisualTransform.localPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
-        
+
     }
     public void Fall(int stackAmount)
     {
-       
+
         playerVisualTransform.localPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
     }
-    
+
 
 
     void Start()

@@ -46,7 +46,6 @@ public class LevelTransition : MonoBehaviour, IUIPanel
 
         cameraEffect.SetZoomField(55);
         targetSize = Vector2.zero;
-
         isInTransition = true;
     }
 
@@ -62,7 +61,8 @@ public class LevelTransition : MonoBehaviour, IUIPanel
         {
             if((targetSize - Vector2.zero).sqrMagnitude <= 1)
             {
-                LevelManager.Instance.ChangeLevel(LevelManager.Instance.CurrentLevel.levelId + 1);
+                LevelManager.Instance.ChangeLevel(LevelManager.Instance.CurrentLevelNumber + 1);
+                isInTransition = false;
                 StartCoroutine(IEDelayAction(0.2f, LoadLevelTransition));
             }
             else

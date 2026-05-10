@@ -25,7 +25,7 @@ public class WinPanel: MonoBehaviour, IUIPanel
     {
         SetActive(false);
 
-       LevelManager.Instance.ChangeLevel(LevelManager.Instance.CurrentLevel.levelId);
+       UIManagement.Instance.PlayLevelTransition();
         
     }
 }

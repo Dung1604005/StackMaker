@@ -21,7 +21,7 @@ public class MainMenuUI : MonoBehaviour, IUIPanel
 
     public void ExitGame()
     {
-        PlayerPrefs.SetInt("currentLevel", LevelManager.Instance.CurrentLevel.levelId);
+        PlayerPrefs.SetInt("currentLevel", LevelManager.Instance.CurrentLevelNumber);
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #else

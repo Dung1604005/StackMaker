@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class WinArea : BrickBase
@@ -25,20 +26,38 @@ public class WinArea : BrickBase
 
         chessOpen.SetActive(true);
 
+        EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = false});
+
         EventBus<OnWinEvent>.Raise(new OnWinEvent
         {
             
         });
 
-        EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = false});
+        StartCoroutine(IEDelayWin(3f));
     }
 
     public override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(GameConfig.PLAYER_TAG))
         {
+            PlayerController player = ColliderCache<PlayerController>.GetComponent(other);
+
+            player.StopMove();
+
             TriggerWin();
         }
+    }
+
+    IEnumerator IEDelayWin(float timeDelay)
+    {
+        yield return new WaitForSeconds(timeDelay);
+
+        EventBus<OnWinEvent>.Raise(new OnWinEvent
+        {
+            
+        });
+
+
     }
 
 

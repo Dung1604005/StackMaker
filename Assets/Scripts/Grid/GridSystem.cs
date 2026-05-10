@@ -56,7 +56,7 @@ public class GridSystem : MonoBehaviour
 
     public void OnLoadLevel(OnChangeLevel onChangeLevel)
     {
-        LevelDataSO levelData = LevelManager.Instance.CurrentLevel;
+        LevelDataSO levelData = LevelManager.Instance.CurrentLevelData;
         ClearGrid();
         GenerateGrid(levelData);
 

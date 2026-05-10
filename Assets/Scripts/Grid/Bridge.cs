@@ -22,9 +22,16 @@ public class Bridge : BrickBase
         }
         if (collider.CompareTag(GameConfig.PLAYER_TAG))
         {
-            if (collider.TryGetComponent<PlayerController>(out PlayerController playerController))
+            PlayerController player = ColliderCache<PlayerController>.GetComponent(collider);
+
+            if(player == null)
             {
-                if (playerController.StackObjectController.RemoveStackObject())
+                player = collider.GetComponent<PlayerController>();
+                ColliderCache<PlayerController>.AddComponent(collider, player);
+            }
+            if (player != null)
+            {
+                if (player.StackObjectController.RemoveStackObject())
                 {
                     interacted = true;
                     foreach (Transform child in this.transform)
@@ -36,6 +43,10 @@ public class Bridge : BrickBase
                     }
                 }
                
+            }
+            else
+            {
+                Debug.LogError("Collider of player dont have component PlayerController");
             }
 
         }

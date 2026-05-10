@@ -585,6 +585,11 @@ public class GridMapEditorWindow : EditorWindow
             }
         }
         placedBrickDict.Clear();
+
+        foreach(Transform child in root)
+        {
+            DestroyImmediate(child.gameObject);
+        }
     }
 }
 
