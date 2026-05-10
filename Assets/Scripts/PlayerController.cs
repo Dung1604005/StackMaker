@@ -24,6 +24,20 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Vector3 targetPosition;
 
+    [SerializeField] private bool isFalling = false;
+
+    [SerializeField] private float fallSpeed = 0f;
+
+    [SerializeField] private float gravity = 9.8f;
+
+    [SerializeField] private Vector3 targetFallPosition;
+
+
+
+    
+
+
+
     public StackObjectController StackObjectController => stackObjectController;
 
     #region Init
@@ -195,6 +209,8 @@ public class PlayerController : MonoBehaviour
     public void OnWin(OnWinEvent onWinEvent)
     {
         StopMove();
+        stackObjectController.ClearAllStack();
+        Fall(0);
         anim.SetInteger("renwu", 2);
     }
 
@@ -209,7 +225,7 @@ public class PlayerController : MonoBehaviour
         {
             playerVisualTransform.eulerAngles = Vector3.Lerp(playerVisualTransform.eulerAngles, targetRotation, 0.5f);
 
-            Debug.Log(playerVisualTransform.eulerAngles);
+           
             yield return null;
         }
 
@@ -224,8 +240,9 @@ public class PlayerController : MonoBehaviour
     }
     public void Fall(int stackAmount)
     {
-
-        playerVisualTransform.localPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
+        
+        isFalling = true;
+        targetFallPosition = new Vector3(0f, stackAmount * stackObjectController.OffsetY, 0f);
     }
 
 
@@ -237,6 +254,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (isFalling)
+        {
+            fallSpeed += Time.deltaTime*gravity;
+
+            playerVisualTransform.localPosition = Vector3.MoveTowards(playerVisualTransform.localPosition, targetFallPosition, fallSpeed*Time.deltaTime);
+
+            if (Vector3.Distance(playerVisualTransform.localPosition, targetFallPosition) < 0.01f)
+            {
+                isFalling = false;
+            }
+        }
         if (!isMoving) return;
 
         Move();

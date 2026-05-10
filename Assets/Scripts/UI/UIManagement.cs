@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class UIManagement : MonoBehaviour
@@ -36,13 +37,21 @@ public class UIManagement : MonoBehaviour
     }
     public void OpenWinUI(OnWinEvent onWinEvent)
     {
-        winPanel.SetActive(true);
+        StartCoroutine(IEDelayWin(3f));
     }
     public void PlayLevelTransition()
     {
         levelTransition.SetActive(true);
     }
 
+    private  IEnumerator IEDelayWin(float timeDelay)
+    {
+        yield return new WaitForSeconds(timeDelay);
+
+        winPanel.SetActive(true);
+
+
+    }
     void Awake()
     {
         if(Instance != null && Instance != this)

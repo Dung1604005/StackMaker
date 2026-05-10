@@ -33,7 +33,6 @@ public class WinArea : BrickBase
             
         });
 
-        StartCoroutine(IEDelayWin(3f));
     }
 
     public override void OnTriggerEnter(Collider other)
@@ -48,17 +47,6 @@ public class WinArea : BrickBase
         }
     }
 
-    IEnumerator IEDelayWin(float timeDelay)
-    {
-        yield return new WaitForSeconds(timeDelay);
-
-        EventBus<OnWinEvent>.Raise(new OnWinEvent
-        {
-            
-        });
-
-
-    }
 
 
 

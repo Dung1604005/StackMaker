@@ -39,6 +39,7 @@ public class LevelManager : MonoBehaviour
             currentLevelNumber = levelId;
             collectedStack = 0;
             PlayerPrefs.SetInt("currentLevel", levelId);
+            
             EventBus<OnChangeLevel>.Raise(new OnChangeLevel { LevelId = levelId });
             EventBus<OnCanInteract>.Raise(new OnCanInteract{canInteract = true});
         }
@@ -62,7 +63,7 @@ public class LevelManager : MonoBehaviour
     public void OnInit()
     {
         collectedStack = 0;
-        ChangeLevel(currentLevelData.levelId);       
+        ChangeLevel(currentLevelNumber);       
     }
     public void LoadSaveData()
     {

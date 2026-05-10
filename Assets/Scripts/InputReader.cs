@@ -21,7 +21,7 @@ public class InputReader : MonoBehaviour
 
     public void OnSetInteract(OnCanInteract onCanInteract)
     {
-        Debug.Log(onCanInteract.canInteract);
+        
         if(onCanInteract.canInteract == true)
         {
             StartCoroutine(DelayEnableDetection());
@@ -32,10 +32,13 @@ public class InputReader : MonoBehaviour
         }
         
     }
+
+  
     
     void Awake()
     {
         canDetect = false;
+        
     }
 
     void Update()
@@ -44,6 +47,9 @@ public class InputReader : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             startPos = Input.mousePosition;
+            
+           
+            
 
         }
         else if (Input.GetMouseButtonUp(0))
@@ -51,8 +57,9 @@ public class InputReader : MonoBehaviour
             // Calculate to first touch and the last to get the direct player want to move
             endPos = Input.mousePosition;
 
+            
             //Player have to swipe
-            if((endPos - startPos).sqrMagnitude <= 36)
+            if((endPos - startPos).sqrMagnitude <= 100f)
             {
                 return;
             }
@@ -65,6 +72,8 @@ public class InputReader : MonoBehaviour
             });
 
         }
+
+        
     }
     private IEnumerator DelayEnableDetection()
     {
